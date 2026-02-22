@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AppSee | App Development & Marketing Experts</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; }
+    body { background:#0b0f1a; color:#fff; overflow-x:hidden; }
+
+    nav {
+      position:fixed; top:0; width:100%; padding:18px 8%;
+      display:flex; justify-content:space-between; align-items:center;
+      background:rgba(0,0,0,0.4); backdrop-filter:blur(10px); z-index:1000;
+    }
+
+    .logo {
+      font-size:28px; font-weight:700;
+      background:linear-gradient(90deg,#ff3cac,#784ba0,#2b86c5);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    }
+
+    nav ul { list-style:none; display:flex; gap:30px; }
+    nav a { text-decoration:none; color:#ddd; font-weight:500; transition:.3s; }
+    nav a:hover { color:#fff; }
+
+    .hero {
+      height:100vh; display:flex; align-items:center; justify-content:center;
+      text-align:center; padding:0 8%;
+      background:radial-gradient(circle at top,#1a1f35,#05070d);
+    }
+
+    .hero h1 { font-size:60px; margin-bottom:20px; }
+    .hero span {
+      background:linear-gradient(90deg,#00f5ff,#ff00ff);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    }
+
+    .hero p { color:#bbb; max-width:750px; margin:auto; margin-bottom:30px; }
+
+    .btn {
+      padding:14px 32px; border-radius:40px; border:none;
+      font-weight:600; cursor:pointer;
+      background:linear-gradient(90deg,#00f5ff,#ff00ff);
+      color:#fff; transition:.3s;
+    }
+
+    .btn:hover { transform:translateY(-3px); box-shadow:0 10px 25px rgba(255,0,255,.4); }
+
+    .section { padding:100px 8%; }
+    .section h2 { text-align:center; font-size:40px; margin-bottom:60px; }
+
+    .grid {
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+      gap:30px;
+    }
+
+    .card {
+      background:rgba(255,255,255,0.05);
+      border-radius:20px; padding:30px;
+      backdrop-filter:blur(10px);
+      transition:.3s;
+    }
+
+    .card:hover { transform:translateY(-8px); background:rgba(255,255,255,0.1); }
+    .card h3 { margin-bottom:15px; }
+    .card p { color:#ccc; font-size:15px; }
+
+    .highlight {
+      background:linear-gradient(135deg,#111735,#1b1f3a);
+      border-top:1px solid rgba(255,255,255,.08);
+    }
+
+    .store-badges { margin-top:25px; display:flex; gap:20px; justify-content:center; flex-wrap:wrap; }
+
+    .badge {
+      padding:12px 22px; border-radius:30px;
+      background:rgba(255,255,255,0.08);
+      font-size:14px; border:1px solid rgba(255,255,255,0.15);
+    }
+
+    .contact { text-align:center; background:linear-gradient(180deg,#0b0f1a,#111735); }
+    .contact p { margin:10px 0; color:#ccc; }
+
+    footer { text-align:center; padding:25px; background:#05070d; color:#777; font-size:14px; }
+
+    @media(max-width:768px){
+      .hero h1{font-size:38px;}
+      nav ul{display:none;}
+    }
+  </style>
+</head>
+
+<body>
+
+<nav>
+  <div class="logo">AppSee</div>
+  <ul>
+    <li><a href="#home">Home</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#marketing">Marketing</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<section class="hero" id="home">
+  <div>
+    <h1>We Build & Market Apps with <span>AppSee</span></h1>
+    <p>
+      Complete mobile app solutions — development, premium UI/UX, Play Store & App Store publishing,
+      ASO optimization, and performance marketing.
+    </p>
+    <button class="btn" onclick="scrollToContact()">Start Your Project</button>
+  </div>
+</section>
+
+<section class="section" id="services">
+  <h2>Development Services</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>Android & iOS Apps</h3>
+      <p>Custom mobile applications with high performance, security, and scalability.</p>
+    </div>
+    <div class="card">
+      <h3>Modern UI/UX</h3>
+      <p>Clean, attractive, and conversion-focused user interface design.</p>
+    </div>
+    <div class="card">
+      <h3>Web & Admin Panels</h3>
+      <p>Powerful dashboards and backend systems to manage your application easily.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section highlight" id="marketing">
+  <h2>App Marketing & Store Optimization</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>Play Store Publishing</h3>
+      <p>Complete setup, listing optimization, keyword research, and ranking strategy.</p>
+    </div>
+    <div class="card">
+      <h3>App Store Optimization</h3>
+      <p>Metadata optimization, screenshots design, competitor research, and growth strategy.</p>
+    </div>
+    <div class="card">
+      <h3>Paid Ads & Growth</h3>
+      <p>User acquisition campaigns, install ads, analytics tracking, and ROI improvement.</p>
+    </div>
+  </div>
+
+  <div class="store-badges">
+    <div class="badge">Google Play Store Expert</div>
+    <div class="badge">Apple App Store Expert</div>
+    <div class="badge">ASO & App Ranking Specialist</div>
+  </div>
+</section>
+
+<section class="section contact" id="contact">
+  <h2>Contact AppSee</h2>
+  <p><strong>Phone:</strong> +91 90422 00706</p>
+  <p><strong>Email:</strong> appseeit@gmail.com</p>
+  <button class="btn" onclick="window.location.href='mailto:appseeit@gmail.com'">Email Us</button>
+</section>
+
+<footer>
+  © 2026 AppSee. All rights reserved.
+</footer>
+
+<script>
+  function scrollToContact(){
+    document.getElementById('contact').scrollIntoView({behavior:'smooth'});
+  }
+</script>
+
+</body>
+</html>
