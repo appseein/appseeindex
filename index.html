@@ -20,181 +20,270 @@
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://appsee.in/" />
   <meta property="og:image" content="https://appsee.in/preview.jpg" />
-
-
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
   <style>
-    * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; }
-    body { background:#0b0f1a; color:#fff; overflow-x:hidden; }
+    *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
+    body{background:#f7fbff;color:#05203a;overflow-x:hidden;-webkit-font-smoothing:antialiased}
 
-    nav {
-      position:fixed; top:0; width:100%; padding:18px 8%;
-      display:flex; justify-content:space-between; align-items:center;
-      background:rgba(0,0,0,0.4); backdrop-filter:blur(10px); z-index:1000;
-    }
+    /* Navigation */
+    nav{position:fixed;top:0;width:100%;padding:14px 6%;display:flex;justify-content:space-between;align-items:center;background:#ffffff;border-bottom:1px solid rgba(6,27,44,0.06);z-index:1000}
+    .logo{font-size:32px;font-weight:800;color:#0b6ff2;background:linear-gradient(90deg,#0b6ff2,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-decoration:none}
+    
+    .nav-links{list-style:none;display:flex;gap:20px;align-items:center}
+    .nav-links a{color:#09304a;text-decoration:none;font-weight:600;padding:8px 10px;border-radius:8px;transition: .18s}
+    .nav-links a:hover{background:#eef6ff}
 
-    .logo {
-      font-size:28px; font-weight:700;
-      background:linear-gradient(90deg,#ff3b3b,#ff8c42,#ff0066);
-      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-    }
+    .hamburger{display:none;width:44px;height:44px;border-radius:8px;background:#f0f7ff;border:none;color:#0b6ff2;align-items:center;justify-content:center;cursor:pointer}
 
-    nav ul { list-style:none; display:flex; gap:30px; }
-    nav a { text-decoration:none; color:#ddd; font-weight:500; transition:.3s; }
-    nav a:hover { color:#fff; }
+    /* Hero Section */
+    .hero{height:86vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:0 6%;background:linear-gradient(90deg,#e6f4ff,#f7fbff)}
+    .hero h1{font-size: clamp(32px, 5vw, 48px); margin-bottom:14px; line-height:1.1; color:#05203a}
+    .hero span{color:#0b6ff2}
+    .hero p{color:#234a60; max-width:780px; margin:0 auto 22px; font-size: 17px}
 
-    .hero {
-      height:100vh; display:flex; align-items:center; justify-content:center;
-      text-align:center; padding:0 8%;
-      background:radial-gradient(circle at top,#2a0f14,#120508);
-    }
+    .btn{padding:12px 24px;border-radius:999px;border:none;font-weight:700;cursor:pointer;background:#0b6ff2;color:#fff;box-shadow:0 8px 24px rgba(11,111,242,0.12); transition: .2s; text-decoration: none; display: inline-block;}
+    .btn.secondary{background:#06b6d4}
+    .btn:active{transform: scale(0.96);}
 
-    .hero h1 { font-size:60px; margin-bottom:20px; }
-    .hero span {
-      background:linear-gradient(90deg,#ff3b3b,#ff8c42);
-      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-    }
+    /* Sections */
+    .section{padding:72px 6%; max-width: 1200px; margin: 0 auto;}
+    .section h2{text-align:center; font-size:30px; margin-bottom:36px; color:#05203a}
+    .highlight{background:#f0fbff; border-top:1px solid rgba(6,27,44,0.03); max-width: 100%;}
+    
+    .grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:20px}
+    .card{background:#fff; border-radius:12px; padding:25px; transition: .3s; box-shadow:0 6px 20px rgba(16,24,40,0.06); border: 1px solid rgba(0,0,0,0.01)}
+    .card:hover{transform:translateY(-8px); box-shadow: 0 20px 40px rgba(11,111,242,0.1)}
+    .card h3{margin-bottom:10px; color:#083048; font-size: 20px}
+    .card p{color:#375a6b; font-size:15px; line-height: 1.6}
 
-    .hero p { color:#bbb; max-width:750px; margin:auto; margin-bottom:30px; }
+    /* Counter Animation */
+    .count{font-size: 32px; font-weight: 800; color: #0b6ff2}
 
-    .btn {
-      padding:14px 32px; border-radius:40px; border:none;
-      font-weight:600; cursor:pointer;
-      background:linear-gradient(90deg,#ff3b3b,#ff8c42);
-      color:#fff; transition:.3s;
-    }
+    /* Store Badges */
+    .store-badges{margin-top:30px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap}
+    .badge{padding:8px 16px; border-radius:999px; background:#eef6ff; font-size:13px; color:#083048; border:1px solid rgba(11,111,242,0.1); font-weight: 600}
 
-    .btn:hover { transform:translateY(-3px); box-shadow:0 10px 25px rgba(255,0,255,.4); }
+    /* Mobile Menu Overlay */
+    .mobile-menu{position:fixed;inset:0;background:#ffffff;display:flex;flex-direction:column;padding:40px 30px;gap:15px;transform:translateX(100%);transition:.4s cubic-bezier(0.4, 0, 0.2, 1);z-index:1500}
+    .mobile-menu.open{transform:translateX(0)}
+    .close-menu-btn {align-self: flex-end; background: #f0f2f5; border: none; width: 45px; height: 45px; border-radius: 50%; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;}
+    .mobile-menu a{color:#05203a; font-size:26px; font-weight:700; text-decoration:none; border-bottom: 1px solid #f0f0f0; padding-bottom: 10px;}
 
-    .section { padding:100px 8%; }
-    .section h2 { text-align:center; font-size:40px; margin-bottom:60px; }
+    /* Company Modal */
+    .modal{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(5,32,58,0.4);backdrop-filter: blur(5px);opacity:0;pointer-events:none;transition:.3s;z-index:2000}
+    .modal.open{opacity:1;pointer-events:auto}
+    .modal-card{width:min(500px,90%); background:#fff; border-radius:24px; padding:40px; position:relative; transform: scale(0.9); transition: 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);}
+    .modal.open .modal-card {transform: scale(1);}
+    .close-modal{position:absolute; top:20px; right:20px; background:#f0f4f8; border:0; width:32px; height:32px; border-radius:50%; cursor:pointer;}
 
-    .grid {
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-      gap:30px;
-    }
+    /* Reveal Animations */
+    .reveal{opacity:0; transform:translateY(25px); transition:all .7s ease-out}
+    .reveal.show{opacity:1; transform:translateY(0)}
 
-    .card {
-      background:rgba(255,255,255,0.05);
-      border-radius:20px; padding:30px;
-      backdrop-filter:blur(10px);
-      transition:.3s;
-    }
+    footer{padding:40px 6%; border-top: 1px solid #eee; margin-top: 50px}
+    .footer-inner{display:flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; max-width: 1100px; margin: 0 auto}
+    .footer-social{display:flex; gap:20px}
+    .footer-link{display:flex; align-items:center; gap:8px; color:#0b6ff2; text-decoration:none; font-weight:600}
+    .footer-link svg{width:20px; height:20px}
 
-    .card:hover { transform:translateY(-8px); background:rgba(255,255,255,0.1); }
-    .card h3 { margin-bottom:15px; }
-    .card p { color:#ccc; font-size:15px; }
-
-    .highlight {
-      background:linear-gradient(135deg,#111735,#1b1f3a);
-      border-top:1px solid rgba(255,255,255,.08);
-    }
-
-    .store-badges { margin-top:25px; display:flex; gap:20px; justify-content:center; flex-wrap:wrap; }
-
-    .badge {
-      padding:12px 22px; border-radius:30px;
-      background:rgba(255,255,255,0.08);
-      font-size:14px; border:1px solid rgba(255,255,255,0.15);
-    }
-
-    .contact { text-align:center; background:linear-gradient(180deg,#0b0f1a,#111735); }
-    .contact p { margin:10px 0; color:#ccc; }
-
-    footer { text-align:center; padding:25px; background:#05070d; color:#777; font-size:14px; }
-
-    @media(max-width:768px){
-      .hero h1{font-size:38px;}
-      nav ul{display:none;}
-    }
+    @media(max-width:900px){ .nav-links{display:none} .hamburger{display:flex} }
   </style>
 </head>
-
 <body>
 
 <nav>
-  <div class="logo">AppSee</div>
-  <ul>
-    <li><a href="#home">Home</a></li>
-    <li><a href="#services">Services</a></li>
-    <li><a href="#marketing">Marketing</a></li>
-    <li><a href="#contact">Contact</a></li>
+  <a href="index.html" class="logo">AppSee</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="service.html">Services</a></li>
+    <li><a href="market.html">Marketing</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><button class="btn" id="companyBtn">Company</button></li>
   </ul>
+  <div class="top-actions">
+    <button class="hamburger" id="openBtn">
+      <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+    </button>
+  </div>
 </nav>
 
-<section class="hero" id="home">
+<div class="mobile-menu" id="mobileMenu">
+  <button class="close-menu-btn" id="closeBtn">✕</button>
+  <a href="index.html">Home</a>
+  <a href="service.html">Services</a>
+  <a href="market.html">Marketing</a>
+  <a href="contact.html">Contact</a>
+  <button class="btn" id="mobileCompanyBtn" style="margin-top:20px; width: 100%">Company Profile</button>
+</div>
+
+<div class="modal" id="companyModal">
+  <div class="modal-card">
+    <button class="close-modal" id="closeModalBtn">✕</button>
+    <h2 style="color:#0b6ff2; margin-bottom:15px;">About AppSee</h2>
+    <p style="color:#234a60; line-height:1.6; margin-bottom:20px;">AppSee is a top-level app development and marketing company providing end-to-end mobile solutions: design, development, publishing and growth.</p>
+    <div style="background:#f8fbff; padding:20px; border-radius:12px; border:1px solid #eef2f6;">
+      <p style="font-size:14px; color:#375a6b;">📞 +91 90422 00706</p>
+      <p style="font-size:14px; color:#375a6b;">📧 appseeit@gmail.com</p>
+      <p style="font-size:14px; color:#375a6b;">📍 Chennai, India</p>
+    </div>
+  </div>
+</div>
+
+<section class="hero reveal">
   <div>
     <h1>We Build & Market Apps with <span>AppSee</span></h1>
-    <p>
-      Complete mobile app solutions — development, premium UI/UX, Play Store & App Store publishing,
-      ASO optimization, and performance marketing.
-    </p>
-    <button class="btn" onclick="scrollToContact()">Start Your Project</button>
+    <p>Complete mobile app solutions — development, premium UI/UX, Play Store & App Store publishing, ASO optimization, and performance marketing.</p>
+    <button class="btn" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Start Your Project</button>
+  </div>
+</section>
+
+<section class="section" id="stats">
+  <h2>Our Achievements</h2>
+  <div class="grid" style="text-align:center;">
+    <div class="card reveal">
+      <h3><span class="count" data-target="60">0</span>+</h3>
+      <p>Projects Completed</p>
+    </div>
+    <div class="card reveal">
+      <h3><span class="count" data-target="30">0</span>+</h3>
+      <p>Play Store Published</p>
+    </div>
   </div>
 </section>
 
 <section class="section" id="services">
   <h2>Development Services</h2>
   <div class="grid">
-    <div class="card">
-      <h3>Android & iOS Apps</h3>
+    <div class="card reveal">
+      <h3>Android Apps & Web</h3>
       <p>Custom mobile applications with high performance, security, and scalability.</p>
     </div>
-    <div class="card">
+    <div class="card reveal">
       <h3>Modern UI/UX</h3>
       <p>Clean, attractive, and conversion-focused user interface design.</p>
     </div>
-    <div class="card">
-      <h3>Web & Admin Panels</h3>
+    <div class="card reveal">
+      <h3>Website</h3>
       <p>Powerful dashboards and backend systems to manage your application easily.</p>
     </div>
   </div>
 </section>
 
 <section class="section highlight" id="marketing">
-  <h2>App Marketing & Store Optimization</h2>
-  <div class="grid">
-    <div class="card">
-      <h3>Play Store Publishing</h3>
-      <p>Complete setup, listing optimization, keyword research, and ranking strategy.</p>
+  <div style="max-width:1200px; margin:0 auto;">
+    <h2>App Marketing & Store Optimization</h2>
+    <div class="grid">
+      <div class="card reveal">
+        <h3>Play Store Publishing</h3>
+        <p>Complete setup, listing optimization, keyword research, and ranking strategy.</p>
+      </div>
+      <div class="card reveal">
+        <h3>App Store Optimization</h3>
+        <p>Metadata optimization, screenshots design, competitor research, and growth strategy.</p>
+      </div>
+      <div class="card reveal">
+        <h3>Paid Ads & Growth</h3>
+        <p>User acquisition campaigns, install ads, analytics tracking, and ROI improvement.</p>
+      </div>
     </div>
-    <div class="card">
-      <h3>App Store Optimization</h3>
-      <p>Metadata optimization, screenshots design, competitor research, and growth strategy.</p>
+    <div class="store-badges reveal">
+      <div class="badge">Google Play Store Expert</div>
+      <div class="badge">Apple App Store Expert</div>
+      <div class="badge">ASO & App Ranking Specialist</div>
     </div>
-    <div class="card">
-      <h3>Paid Ads & Growth</h3>
-      <p>User acquisition campaigns, install ads, analytics tracking, and ROI improvement.</p>
-    </div>
-  </div>
-
-  <div class="store-badges">
-    <div class="badge">Google Play Store Expert</div>
-    <div class="badge">Apple App Store Expert</div>
-    <div class="badge">ASO & App Ranking Specialist</div>
   </div>
 </section>
 
-<section class="section contact" id="contact">
-  <h2>Contact AppSee</h2>
-  <p><strong>Phone:</strong> +91 90422 00706</p>
-  <p><strong>Email:</strong> appseeit@gmail.com</p>
-  <button class="btn" onclick="window.location.href='mailto:appseeit@gmail.com'">Email Us</button>
+<section class="section" id="contact" style="text-align:center;">
+  <h2 class="reveal">Contact AppSee</h2>
+  <div class="reveal">
+    <p style="margin-bottom:10px;"><strong>Phone:</strong> +91 90422 00706</p>
+    <p style="margin-bottom:20px;"><strong>Email:</strong> appseeit@gmail.com</p>
+    <a href="mailto:appseeit@gmail.com" class="btn secondary">Email Us Now</a>
+  </div>
 </section>
 
 <footer>
-  © 2026 AppSee.in  All rights reserved.
+  <div class="footer-inner">
+    <div class="footer-left">© 2026 AppSee.in — All rights reserved.</div>
+    <div class="footer-social">
+      <a class="footer-link" href="https://www.linkedin.com/company/appseein" target="_blank">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+        <span>LinkedIn</span>
+      </a>
+      <a class="footer-link" href="https://www.instagram.com/appsee.in" target="_blank">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.332 3.608 1.308.975.975 1.245 2.242 1.308 3.607.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.062 1.366-.332 2.633-1.308 3.608-.975.975-2.242 1.245-3.607 1.308-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.366-.062-2.633-.332-3.608-1.308-.975-.975-1.245-2.242-1.308-3.607-.058-1.266-.07-1.646-.07-4.85s.012-3.584.07-4.85c.062-1.366.332-2.633 1.308-3.608.975-.975 2.242-1.245 3.607-1.308 1.266-.058 1.646-.07 4.85-.07zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+        </svg>
+        <span>Instagram</span>
+      </a>
+    </div>
+  </div>
 </footer>
 
 <script>
-  function scrollToContact(){
-    document.getElementById('contact').scrollIntoView({behavior:'smooth'});
+  // Elements
+  const menu = document.getElementById('mobileMenu');
+  const modal = document.getElementById('companyModal');
+  const body = document.body;
+
+  // Toggle Mobile Menu
+  function toggleMenu(isOpen) {
+    menu.classList.toggle('open', isOpen);
+    body.style.overflow = isOpen ? 'hidden' : '';
+  }
+
+  // Toggle Modal
+  function toggleModal(isOpen) {
+    modal.classList.toggle('open', isOpen);
+    body.style.overflow = isOpen ? 'hidden' : '';
+  }
+
+  // Event Listeners
+  document.getElementById('openBtn').onclick = () => toggleMenu(true);
+  document.getElementById('closeBtn').onclick = () => toggleMenu(false);
+  document.getElementById('companyBtn').onclick = () => toggleModal(true);
+  document.getElementById('mobileCompanyBtn').onclick = () => { toggleMenu(false); toggleModal(true); };
+  document.getElementById('closeModalBtn').onclick = () => toggleModal(false);
+  
+  // Close modal when clicking outside
+  window.onclick = (e) => { if (e.target == modal) toggleModal(false); }
+
+  // Intersection Observer for Reveal Animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if(entry.isIntersecting) {
+        entry.target.classList.add('show');
+        // Start counter if the intersecting element contains a counter
+        const countEl = entry.target.querySelector('.count');
+        if(countEl) startCounter(countEl);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Counter Logic
+  function startCounter(el) {
+    if(el.classList.contains('counted')) return; // Don't recount
+    const target = +el.getAttribute('data-target');
+    let count = 0;
+    const increment = target / 50;
+    const update = () => {
+      if(count < target) {
+        count += increment;
+        el.innerText = Math.ceil(count);
+        setTimeout(update, 30);
+      } else {
+        el.innerText = target;
+        el.classList.add('counted');
+      }
+    };
+    update();
   }
 </script>
-<!-- Structured Data (Google Rich Results) -->
-  <script type="application/ld+json">
+ <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "Organization",
@@ -205,6 +294,5 @@
     "sameAs": []
   }
   </script>
-
 </body>
 </html>
