@@ -1,60 +1,177 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Privacy Policy — AppSee</title>
-  <meta name="description" content="AppSee privacy policy explaining how we handle user information." />
-  <link rel="icon" type="image/png" href="appsee.png">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Privacy Policy - Live Brain</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Inter:wght@400;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-red: #ff4131;
+            --bg-pink: #f73172;
+            --bg-rose: #ff0055;
+            --bg-orange: #ff8c42;
+            --bg-yellow: #f9d423;
+            --glass: rgba(255,255,255,0.18);
+            --text-dark: #1a000d;
+            --text-light: #ffffff;
+            --surface: rgba(255,255,255,0.92);
+        }
 
-  <style>
-    *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
-    body{background:#f7fbff;color:#05203a}
-    main{padding:100px 6%;max-width:900px;margin:auto}
-    h1{font-size:36px;margin-bottom:20px}
-    h2{margin-top:30px;margin-bottom:10px}
-    p{line-height:1.7;color:#375a6b;margin-bottom:15px}
-    .box{background:#eef4ff;padding:20px;border-radius:10px;margin-top:20px}
-  </style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--bg-red) 0%, var(--bg-rose) 25%, var(--bg-pink) 50%, var(--bg-orange) 75%, var(--bg-yellow) 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 12s ease infinite;
+            color: var(--text-dark);
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            justify-content: center;
+            padding: 30px 16px;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            width: min(1100px, 100%);
+            background: rgba(255,255,255,0.94);
+            border-radius: 28px;
+            box-shadow: 0 25px 80px rgba(10,10,10,0.18);
+            padding: 36px 40px;
+            backdrop-filter: blur(18px);
+        }
+
+        h1 {
+            font-family: 'Syncopate', sans-serif;
+            font-size: clamp(2.25rem, 5vw, 3rem);
+            margin-bottom: 18px;
+            color: var(--text-dark);
+        }
+
+        h2 {
+            font-size: 1.3rem;
+            margin-top: 28px;
+            margin-bottom: 12px;
+            color: var(--text-dark);
+        }
+
+        p, li {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: #2e1e2a;
+        }
+
+        ul {
+            margin-left: 18px;
+            margin-bottom: 18px;
+        }
+
+        a {
+            color: #d5357d;
+            text-decoration: none;
+        }
+
+        .footer {
+            margin-top: 32px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0,0,0,0.08);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: space-between;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+        }
+
+        .back-link i {
+            font-size: 0.95rem;
+        }
+
+        @media (max-width: 680px) {
+            .container {
+                padding: 28px 20px;
+            }
+        }
+    </style>
 </head>
-
 <body>
+    <div class="container">
+        <h1>Privacy Policy</h1>
+        <p>Last updated: May 3, 2026</p>
 
-<main>
-  <h1>Privacy Policy</h1>
-  <p><strong>Last Updated:</strong> April 16, 2026</p>
+        <p>Welcome to <strong>Live Brain: World Trivia Quiz</strong> ("App"), published by <strong>Appsee</strong>. Your privacy is important to us. This Privacy Policy explains how we collect, use, and protect information when you use our game.</p>
+        <p>This policy applies to the entire Live Brain game experience and related features within the app.</p>
 
-  <p>This Privacy Policy explains how AppSee we handles your information.</p>
+        <h2>1. Information We Collect</h2>
+        <p>We do not require you to create an account or provide personal identifiers to use the App. The following data may be collected:</p>
+        <ul>
+            <li><strong>No personal account data:</strong> The App does not ask for or store names, email addresses, phone numbers, or other personal identifiers.</li>
+            <li><strong>Device and app usage data:</strong> Information about your device, operating system, app version, game progress, scores, and interactions within the App.</li>
+            <li><strong>Local storage:</strong> Data such as high scores, settings, and game progress may be stored locally on your device.</li>
+            <li><strong>Advertising identifiers:</strong> If applicable, non-personal identifiers such as advertising ID may be used for ad personalization and analytics.</li>
+        </ul>
 
-  <h2>Information We Collect</h2>
-  <p>We do not collect personal information from users. We only receive your email address if you contact us.</p>
+        <h2>2. How We Use Your Information</h2>
+        <ul>
+            <li>To provide and improve the App experience.</li>
+            <li>To remember game settings, levels, and progress.</li>
+            <li>To display advertisements and measure their performance.</li>
+            <li>To analyze app performance and understand usage patterns.</li>
+        </ul>
 
-  <h2>How We Use Information</h2>
-  <p>We use your email address only to respond to your inquiries and provide support.</p>
+        <h2>3. Third-Party Services</h2>
+        <p>The App may use third-party services that collect information used to identify you. These services include advertising and analytics partners.</p>
+        <p>Common examples include:</p>
+        <ul>
+            <li>Google Play services</li>
+            <li>Ad networks and analytics providers</li>
+        </ul>
+        <p>These third parties are responsible for their own privacy practices. Please refer to their privacy policies for additional details.</p>
 
-  <h2>Tracking</h2>
-  <p>We do not use tracking or analytics in our app.</p>
+        <h2>4. Advertising</h2>
+        <p>The App may show ads from third-party networks. Ads may use device identifiers or anonymous ad IDs to deliver relevant ads and measure campaign performance. We do not share your personal data for advertising beyond what is required by standard advertising SDKs.</p>
 
-  <h2>Data Sharing</h2>
-  <p>We do not sell or share your information.</p>
+        <h2>5. Children’s Privacy</h2>
+        <p>The App is not intended for children under 13. We do not knowingly collect personal information from children under 13. If you believe we have collected information from a child under 13, please contact us at the email address below so we can promptly delete it.</p>
 
-  <h2>Security</h2>
-  <p>We take reasonable steps to protect your information.</p>
+        <h2>6. Data Retention</h2>
+        <p>We retain information only as long as necessary to provide the App and comply with legal obligations. Local game data remains on your device until you remove the App or clear the stored data.</p>
 
-  <h2>Children's Privacy</h2>
-  <p>Our services are not intended for children under 13.</p>
+        <h2>7. Security</h2>
+        <p>We implement reasonable security measures to help protect your information. However, no method of transmission or storage is completely secure, and we cannot guarantee absolute protection.</p>
 
-  <h2>Policy Updates</h2>
-  <p>We may update this Privacy Policy. Updates will be posted on this page.</p>
+        <h2>8. Changes to This Privacy Policy</h2>
+        <p>We may update this Privacy Policy from time to time. We will post the updated policy within the App and update the "Last updated" date. Your continued use of the App after changes indicates your acceptance of the updated policy.</p>
 
-  <div class="box">
-    <h2>Contact Us</h2>
-    <p>Email: appseeapps@gmail.com</p>
-    <p>Phone: +91 9159899932</p>
-  </div>
+        <h2>9. Contact Us</h2>
+        <p>If you have questions or concerns about this Privacy Policy, please contact us:</p>
+        <ul>
+            <li>Company: Appsee</li>
+            <li>Website: <a href="https://www.appsee.in" target="_blank" rel="noreferrer">www.appsee.in</a></li>
+            <li>Email: <a href="mailto:appseeapps@gmail.com">appseeapps@gmail.com</a></li>
+        </ul>
 
-</main>
-
+        <div class="footer">
+            <a href="home.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Home</a>
+            <span>App: Live Brain: World Trivia Quiz</span>
+        </div>
+    </div>
 </body>
 </html>
