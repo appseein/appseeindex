@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Privacy Policy – Baba Balls 2</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cyan: #00f5ff;
+    --yellow: #ffe600;
+    --purple: #c855ff;
+    --pink: #ff3d8a;
+    --bg: #04010b;
+    --card: rgba(255,255,255,0.04);
+    --border: rgba(255,255,255,0.10);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: #d4d4d8;
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  /* Nebula bg */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 50% at 15% 10%, rgba(138,43,226,0.18) 0%, transparent 55%),
+      radial-gradient(ellipse 60% 40% at 85% 20%, rgba(0,200,255,0.12) 0%, transparent 50%),
+      radial-gradient(ellipse 70% 60% at 50% 100%, rgba(255,0,100,0.12) 0%, transparent 55%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 40px 20px 60px;
+  }
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 36px;
+  }
+  .header .ball-emoji { font-size: 52px; display: block; margin-bottom: 10px; }
+  .header h1 {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2rem;
+    color: var(--yellow);
+    text-shadow: 0 0 20px rgba(255,230,0,0.4);
+    letter-spacing: 1px;
+  }
+  .header .subtitle {
+    font-size: 12px;
+    color: #52525b;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-top: 6px;
+  }
+  .updated {
+    display: inline-block;
+    margin-top: 10px;
+    background: rgba(0,245,255,0.08);
+    border: 1px solid rgba(0,245,255,0.2);
+    color: var(--cyan);
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 20px;
+  }
+  /* Divider */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0,245,255,0.3), transparent);
+    margin: 30px 0;
+  }
+  /* Section card */
+  .section {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 22px 24px;
+    margin-bottom: 14px;
+    backdrop-filter: blur(6px);
+  }
+  .section-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.05rem;
+    color: var(--cyan);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-title .icon { font-size: 1.15rem; }
+  p { color: #a1a1aa; margin-bottom: 8px; }
+  p:last-child { margin-bottom: 0; }
+  ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 6px;
+  }
+  ul li {
+    color: #a1a1aa;
+    padding: 3px 0 3px 18px;
+    position: relative;
+  }
+  ul li::before {
+    content: '›';
+    position: absolute;
+    left: 0;
+    color: var(--purple);
+    font-weight: 900;
+  }
+  a { color: var(--cyan); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  /* Contact box */
+  .contact-box {
+    background: rgba(0,245,255,0.05);
+    border: 1px solid rgba(0,245,255,0.2);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-top: 12px;
+    text-align: center;
+  }
+  .contact-box .label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #52525b;
+    margin-bottom: 6px;
+  }
+  .contact-box a {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    color: var(--yellow);
+    text-shadow: 0 0 10px rgba(255,230,0,0.3);
+  }
+  /* Back button */
+  .back-btn {
+    display: block;
+    text-align: center;
+    margin-top: 32px;
+  }
+  .back-btn a {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    color: var(--bg);
+    background: var(--cyan);
+    padding: 12px 32px;
+    border-radius: 40px;
+    text-decoration: none;
+    box-shadow: 0 0 20px rgba(0,245,255,0.3);
+    transition: box-shadow 0.2s;
+  }
+  .back-btn a:hover { box-shadow: 0 0 32px rgba(0,245,255,0.5); }
+  /* Footer */
+  .footer {
+    text-align: center;
+    margin-top: 40px;
+    font-size: 11px;
+    color: #3f3f46;
+    letter-spacing: 1px;
+  }
+  .footer a { color: #52525b; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="header">
+    <span class="ball-emoji">🎱</span>
+    <h1>Privacy Policy</h1>
+    <div class="subtitle">Baba Balls 2 · Appsee</div>
+    <span class="updated">Updated: June 2025</span>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span class="icon">📋</span> Overview</div>
+    <p>This policy covers the Baba Balls mobile game and related services operated by Appsee (<a href="https://appsee.in" target="_blank">appsee.in</a>). By playing the game, you agree to this policy.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span class="icon">📦</span> Data We Collect</div>
+    <p>We collect minimal data required to operate the game:</p>
+    <ul>
+      <li>Device type, OS version, and language settings</li>
+      <li>Gameplay data (scores, levels, session duration)</li>
+      <li>In-game currency (coins) stored locally on your device</li>
+      <li>Crash logs and error reports for bug fixes</li>
+    </ul>
+    <p style="margin-top:10px;">We do <strong style="color:#d4d4d8;">not</strong> collect your name, email, phone number, or any personal identifiers unless you contact us directly.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span class="icon">🔧</span> How We Use Data</div>
+    <ul>
+      <li>To improve game performance and fix bugs</li>
+      <li>To track gameplay progress and reward coins</li>
+      <li>To analyze general usage patterns (anonymous, aggregated)</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span class="icon">🔒</span> Local Storage</div>
+    <p>Coin balances, high scores, and game settings are saved in your browser's <code style="color:var(--yellow);background:rgba(255,230,0,0.08);padding:1px 6px;border-radius:4px;">localStorage</code>. This data stays on your device and is not sent to our servers.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span class="icon">🤝</span> Third Parties</div>
+    <p>We may use third-party services for analytics and ads. These services have their own privacy policies. We do not sell your data to any third party.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span class="icon">👶</span> Children</div>
+    <p>Baba Balls is a family-friendly game. We do not knowingly collect personal data from children under 13. If you believe a child has provided personal information, contact us and we will delete it promptly.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span class="icon">✏️</span> Changes to This Policy</div>
+    <p>We may update this policy from time to time. Changes will be reflected on this page with an updated date. Continued use of the game means you accept the updated policy.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span class="icon">📬</span> Contact Us</div>
+    <p>Questions or requests about your data? Reach us at:</p>
+    <div class="contact-box">
+      <div class="label">Email</div>
+      <a href="mailto:appseeapps@gmail.com">appseeapps@gmail.com</a>
+    </div>
+    <div class="contact-box" style="margin-top:8px;">
+      <div class="label">Website</div>
+      <a href="https://appsee.in" target="_blank" style="font-family:'Fredoka One',cursive;font-size:1rem;color:var(--cyan);text-shadow:0 0 10px rgba(0,245,255,0.3);">appsee.in</a>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="back-btn">
+    <a href="home.html">← Back to Home</a>
+  </div>
+
+  <div class="footer">
+    <p>© 2026 Appsee · <a href="https://appsee.in" target="_blank">appsee.in</a></p>
+  </div>
+
+</div>
+</body>
+</html>
