@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Privacy Policy - Job Bazaar</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        royal: '#5C4033',
+                        luxury: '#A41928',
+                        gold: '#D4AF37',
+                        paper: '#FDFBF7',
+                        surface: '#FFFFFF',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    boxShadow: {
+                        'premium': '0 8px 30px rgba(92, 64, 51, 0.12)',
+                        'nav': '0 -4px 20px rgba(92, 64, 51, 0.08)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #FDFBF7;
+            -webkit-tap-highlight-color: transparent;
+            overscroll-behavior-y: none;
+        }
+
+        ::-webkit-scrollbar {
+            display: none;
+        }
+
+        .glass-header {
+            background: rgba(253, 251, 247, 0.95);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-bottom: 2px solid rgba(92, 64, 51, 0.08);
+        }
+
+        .policy-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(92, 64, 51, 0.1);
+        }
+    </style>
+</head>
+<body class="text-[#3A281E] antialiased pb-12">
+
+    <!-- Sticky Header -->
+    <header class="fixed top-0 left-0 right-0 z-50 glass-header px-4 py-3 h-16 flex items-center">
+        <div class="max-w-2xl mx-auto w-full flex items-center">
+            <button onclick="window.history.back()" class="w-10 h-10 -ml-2 rounded-full flex items-center justify-center text-royal hover:bg-royal/10 transition active:scale-95">
+                <i class="ph-bold ph-arrow-left text-xl"></i>
+            </button>
+            <h1 class="ml-2 font-serif text-lg font-extrabold text-royal tracking-wide truncate flex-1 text-center pr-8">
+                Privacy Policy
+            </h1>
+        </div>
+    </header>
+
+    <div class="h-20"></div>
+
+    <main class="max-w-2xl mx-auto px-4" id="mainContent">
+        
+        <div class="mb-8 text-center">
+            <div class="w-16 h-16 bg-luxury/10 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-luxury/20 shadow-sm">
+                <i class="ph-fill ph-shield-check text-3xl text-luxury drop-shadow-sm"></i>
+            </div>
+            <h2 class="text-2xl font-black text-royal font-serif">Job Bazaar by Appsee</h2>
+            <p class="text-sm font-bold text-royal/60 mt-1 uppercase tracking-widest">Effective Date: July 2026</p>
+        </div>
+
+        <div class="space-y-6">
+
+            <!-- 1. No Data Collection -->
+            <div class="policy-card p-6 rounded-2xl shadow-premium">
+                <h3 class="text-lg font-black text-royal flex items-center gap-2 mb-3">
+                    <i class="ph-bold ph-user-circle-minus text-luxury text-xl"></i> 1. No Personal Data
+                </h3>
+                <p class="text-[#4A332A] font-bold leading-relaxed text-sm">
+                    We respect your privacy. Job Bazaar does <strong>not</strong> collect, store, or transmit any of your personal details. You are not required to create an account, register, or provide an email address to use this application.
+                </p>
+            </div>
+
+            <!-- 2. Resume & ATS -->
+            <div class="policy-card p-6 rounded-2xl shadow-premium">
+                <h3 class="text-lg font-black text-royal flex items-center gap-2 mb-3">
+                    <i class="ph-bold ph-file-text text-luxury text-xl"></i> 2. Resume Uploads (ATS)
+                </h3>
+                <p class="text-[#4A332A] font-bold leading-relaxed text-sm">
+                    Our AI Resume ATS feature allows you to upload a document to match with jobs. This process happens <strong>entirely locally on your device</strong>. We do not upload, save, or share your resume files with our servers or any third parties. 
+                </p>
+            </div>
+
+            <!-- 3. Third-Party Services (AdMob & Firebase) -->
+            <div class="policy-card p-6 rounded-2xl shadow-premium">
+                <h3 class="text-lg font-black text-royal flex items-center gap-2 mb-3">
+                    <i class="ph-bold ph-plugs-connected text-luxury text-xl"></i> 3. Third-Party Services
+                </h3>
+                <p class="text-[#4A332A] font-bold leading-relaxed text-sm mb-3">
+                    To keep this app free and functional, we use trusted third-party services that may collect specific non-personal data:
+                </p>
+                <ul class="space-y-3 mt-4">
+                    <li class="flex items-start gap-3">
+                        <i class="ph-fill ph-database text-gold text-lg mt-0.5"></i>
+                        <div>
+                            <span class="font-black text-royal block">Firebase</span>
+                            <span class="text-[#4A332A] font-bold text-xs leading-relaxed block mt-0.5">Used securely for hosting our job database and providing real-time feed updates.</span>
+                        </div>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <i class="ph-fill ph-google-play-logo text-luxury text-lg mt-0.5"></i>
+                        <div>
+                            <span class="font-black text-royal block">Google AdMob</span>
+                            <span class="text-[#4A332A] font-bold text-xs leading-relaxed block mt-0.5">Used to display advertisements. AdMob may use advertising IDs and cookies to serve personalized ads based on your interests.</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- 4. Job Links & Accuracy -->
+            <div class="policy-card p-6 rounded-2xl shadow-premium">
+                <h3 class="text-lg font-black text-royal flex items-center gap-2 mb-3">
+                    <i class="ph-bold ph-link text-luxury text-xl"></i> 4. External Job Links
+                </h3>
+                <p class="text-[#4A332A] font-bold leading-relaxed text-sm">
+                    All job postings inside Job Bazaar are manually curated and collected from official company career pages by the Appsee team. Clicking "Apply Now" will redirect you to these external, official websites. We are not responsible for the privacy practices of those third-party sites once you leave our app.
+                </p>
+            </div>
+
+            <!-- 5. Contact -->
+            <div class="bg-gradient-to-br from-royal to-[#3A281E] p-6 rounded-2xl shadow-premium relative overflow-hidden mt-8">
+                <div class="absolute -right-10 -top-10 w-32 h-32 border-4 border-white/10 rounded-full"></div>
+                
+                <h3 class="text-lg font-black text-white relative z-10 mb-2">Contact Appsee</h3>
+                <p class="text-white/80 font-bold text-sm relative z-10 mb-6 leading-relaxed">
+                    If you have any questions regarding this privacy policy or wish to partner with us for hiring, please reach out.
+                </p>
+                
+                <a href="mailto:appseeapps@gmail.com" class="relative z-10 w-full bg-white text-royal text-center font-black py-4 rounded-xl shadow-lg flex items-center justify-center gap-2 uppercase tracking-wide active:scale-95 transition-transform">
+                    <i class="ph-bold ph-envelope-simple text-xl text-luxury"></i>
+                    appseeapps@gmail.com
+                </a>
+            </div>
+
+        </div>
+    </main>
+
+</body>
+</html>
