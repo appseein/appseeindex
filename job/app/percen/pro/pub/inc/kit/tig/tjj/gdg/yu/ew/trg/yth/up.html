@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Job - Admin Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        royal: '#5C4033',   /* Royal luxury brown */
+                        luxury: '#A41928',  /* Mixed red */
+                        paper: '#FDFBF7',   /* Warm light background */
+                    },
+                    boxShadow: {
+                        'premium': '0 10px 40px -10px rgba(92, 64, 51, 0.2)',
+                        'input-focus': '0 0 0 3px rgba(164, 25, 40, 0.2)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom scrollbar for textareas */
+        textarea::-webkit-scrollbar { width: 8px; }
+        textarea::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
+        textarea::-webkit-scrollbar-thumb { background: #5C4033; border-radius: 4px; }
+        textarea::-webkit-scrollbar-thumb:hover { background: #A41928; }
+        
+        /* Smooth transitions for inputs */
+        .input-field { transition: all 0.3s ease; }
+    </style>
+</head>
+<body class="bg-paper min-h-screen flex items-center justify-center p-4 sm:p-8 font-sans text-gray-800">
+
+    <div class="w-full max-w-3xl bg-white rounded-xl shadow-premium overflow-hidden border-t-4 border-luxury relative">
+        
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-royal to-luxury p-6 text-white text-center">
+            <h1 class="text-2xl sm:text-3xl font-bold tracking-wide">Post a New Job</h1>
+            <p class="text-sm opacity-90 mt-2 font-light">Secure Admin Portal</p>
+        </div>
+
+        <!-- Search, Edit & Delete Section -->
+        <div class="bg-gray-50 border-b border-gray-200 p-6 sm:px-10 space-y-4">
+            <h3 class="text-lg font-bold text-royal mb-2">Search to Edit or Delete</h3>
+            <div class="flex flex-col sm:flex-row gap-4">
+                <input type="text" id="searchJobId" placeholder="Enter Job Bazaar ID (e.g. JB-001)" 
+                    class="input-field flex-1 px-4 py-3 rounded-lg border border-gray-300 focus:border-luxury focus:ring-0 focus:shadow-input-focus outline-none text-gray-700 bg-white uppercase">
+                <button type="button" id="searchBtn" 
+                    class="bg-royal text-white font-bold py-3 px-6 rounded-lg shadow hover:bg-opacity-90 transition-colors">
+                    Search
+                </button>
+            </div>
+            
+            <!-- Result Box -->
+            <div id="searchResult" class="hidden bg-white p-4 rounded-lg border border-luxury flex justify-between items-center shadow-sm relative overflow-hidden">
+                <div class="absolute left-0 top-0 bottom-0 w-1 bg-luxury"></div>
+                <div class="pl-2">
+                    <p id="resTitle" class="font-bold text-gray-800"></p>
+                    <p id="resCompany" class="text-sm text-gray-500"></p>
+                    <p class="text-xs text-luxury font-bold mt-1">Form auto-filled for editing below 👇</p>
+                </div>
+                <div class="flex gap-2">
+                    <button type="button" id="cancelEditBtn" class="bg-gray-100 text-gray-600 hover:bg-gray-200 font-bold py-2 px-4 rounded-md transition-colors text-sm border border-gray-200 hidden">
+                        Cancel Edit
+                    </button>
+                    <button type="button" id="deleteBtn" class="bg-red-50 text-red-600 hover:bg-red-100 font-bold py-2 px-4 rounded-md transition-colors text-sm border border-red-200">
+                        Delete Job
+                    </button>
+                </div>
+            </div>
+             <!-- Search Alert -->
+             <div id="searchAlert" class="hidden text-sm font-medium mt-2"></div>
+        </div>
+
+        <form id="jobForm" class="p-6 sm:p-10 space-y-6">
+            
+            <!-- Company, Job Title & Short Desc -->
+            <div class="space-y-6 sm:space-y-0 sm:grid sm:grid-cols-1 md:grid-cols-3 sm:gap-6">
+                <div>
+                    <label for="jobBazaarId" class="block text-sm font-semibold text-royal mb-2">Job Bazaar ID</label>
+                    <input type="text" id="jobBazaarId" readonly value="Auto-generated on publish" 
+                        class="input-field w-full px-4 py-3 rounded-lg border border-gray-200 outline-none text-gray-500 bg-gray-100 cursor-not-allowed font-medium">
+                </div>
+                <div>
+                    <label for="companyName" class="block text-sm font-semibold text-royal mb-2">Company Name</label>
+                    <input type="text" id="companyName" placeholder="e.g. Tata Consultancy Services" 
+                        class="input-field w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-luxury focus:ring-0 focus:shadow-input-focus outline-none text-gray-700 bg-gray-50 focus:bg-white">
+                </div>
+                <div>
+                    <label for="title" class="block text-sm font-semibold text-royal mb-2">Job Title</label>
+                    <input type="text" id="title" placeholder="e.g. Senior Architect" 
+                        class="input-field w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-luxury focus:ring-0 focus:shadow-input-focus outline-none text-gray-700 bg-gray-50 focus:bg-white">
+                </div>
+            </div>
+
+            <!-- Type, Work Model, Experience (Shifted up to maintain 3-col grid balance) -->
+            <div class="space-y-6 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-6">
+                <div>
+                    <label for="type" class="block text-sm font-semibold text-royal mb-2">Job Type</label>
+                    <select id="type" class="input-field w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-luxury focus:ring-0 focus:shadow-input-focus outline-none text-gray-700 bg-gray-50 focus:bg-white appearance-none cursor-pointer">
+                        <option value="">Select Type (None)</option>
+                        <option value="Full Time">Full Time</option>
+                        <option value="Part Time">Part Time</option>
+                        <option value="Temporary">Temporary</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="workModel" class="block text-sm font-semibold text-royal mb-2">Work Model</label>
+                    <select id="workModel" class="input-field w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-luxury focus:ring-0 focus:shadow-input-focus outline-none text-gray-700 bg-gray-50 focus:bg-white appearance-none cursor-pointer">
+                        <option value="">Select Model (None)</option>
+                        <option value="Onsite">Onsite</option>
+                        <option value="Hybrid">Hybrid</option>
+                        <option value="Remote">Remote</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="experience" class="block text-sm font-semibold text-royal mb-2">Experience (Free Text)</label>
+                    <input type="text" id="experience" placeholder="e.g. 0-2 Years, Internship, 5+" 
+                        class="input-field w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-luxury focus:ring-0 focus:shadow-input-focus outline-none text-gray-700 bg-gray-50 focus:bg-white">
+                </div>
+            </div>
+
+            <div class="space-y-6 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-6">
+                <div>
+                    <label for="location" class="block text-sm font-semibold text-royal mb-2">Location</label>
+                    <input type="text" id="location" placeholder="e.g. Mumbai / Maharashtra / Remote" 
+                        class="input-field w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-luxury focus:ring-0 focus:shadow-input-focus outline-none text-gray-700 bg-gray-50 focus:bg-white">
+                </div>
+                <div>
+                    <label for="salary" class="block text-sm font-semibold text-royal mb-2">Salary (Free Text)</label>
+                    <input type="text" id="salary" placeholder="e.g. ₹50,000 - ₹80,000/month" 
+                        class="input-field w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-luxury focus:ring-0 focus:shadow-input-focus outline-none text-gray-700 bg-gray-50 focus:bg-white">
+                </div>
+                <div>
+                    <label for="addedDate" class="block text-sm font-semibold text-royal mb-2">Added Date</label>
+                    <input type="date" id="addedDate" 
+                        class="input-field w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-luxury focus:ring-0 focus:shadow-input-focus outline-none text-gray-700 bg-gray-50 focus:bg-white">
+                </div>
+            </div>
+
+            <div>
+                <label for="jobLink" class="block text-sm font-semibold text-royal mb-2">Application Link (URL)</label>
+                <input type="url" id="jobLink" placeholder="https://company.com/careers or mailto:hr@company.com" 
+                    class="input-field w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-luxury focus:ring-0 focus:shadow-input-focus outline-none text-gray-700 bg-gray-50 focus:bg-white">
+            </div>
+
+            <div>
+                <label for="shortDesc" class="block text-sm font-semibold text-royal mb-2">Short Description</label>
+                <input type="text" id="shortDesc" placeholder="Brief one-line overview" 
+                    class="input-field w-full px-4 py-3 mb-6 rounded-lg border border-gray-300 focus:border-luxury focus:ring-0 focus:shadow-input-focus outline-none text-gray-700 bg-gray-50 focus:bg-white">
+                
+                <label for="fullDesc" class="block text-sm font-semibold text-royal mb-2">Full Description</label>
+                <textarea id="fullDesc" placeholder="Detailed responsibilities, requirements, and benefits..." rows="5"
+                    class="input-field w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-luxury focus:ring-0 focus:shadow-input-focus outline-none text-gray-700 bg-gray-50 focus:bg-white resize-y"></textarea>
+            </div>
+
+            <!-- REGULAR VS SPONSORED TIER SECTION -->
+            <div class="border-t border-gray-200 pt-6">
+                <label class="block text-sm font-semibold text-royal mb-3">Listing Tier</label>
+                <div class="flex gap-6 mb-4">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="radio" name="jobTier" value="Regular" checked class="w-5 h-5 accent-luxury cursor-pointer">
+                        <span class="font-bold text-gray-700">Regular</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="radio" name="jobTier" value="Sponsored" class="w-5 h-5 accent-luxury cursor-pointer">
+                        <span class="font-bold text-luxury">Sponsored</span>
+                    </label>
+                </div>
+
+                <!-- Sponsored Extra Options (Hidden by Default) -->
+                <div id="sponsoredSettings" class="hidden bg-[#FDFBF7] border border-[#A41928]/30 p-6 rounded-xl space-y-4 shadow-sm">
+                    <div class="sm:flex gap-6 space-y-4 sm:space-y-0">
+                        <div class="flex-1">
+                            <label for="sponsoredDays" class="block text-sm font-semibold text-royal mb-2">Sponsored Duration (Days)</label>
+                            <input type="number" id="sponsoredDays" min="1" placeholder="e.g. 7" 
+                                class="input-field w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-luxury focus:ring-0 focus:shadow-input-focus outline-none text-gray-700 bg-white">
+                        </div>
+                        <div class="flex-1">
+                            <label class="block text-sm font-semibold text-royal mb-2">Specific Dates (Optional)</label>
+                            <div class="flex gap-2">
+                                <input type="date" id="sponsorDateInput" class="input-field flex-1 px-4 py-3 rounded-lg border border-gray-300 focus:border-luxury outline-none bg-white">
+                                <button type="button" id="addDateBtn" class="bg-royal text-white font-bold px-4 py-3 rounded-lg hover:bg-opacity-90 transition shadow-sm">Add</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Chips for added dates -->
+                    <div id="datesList" class="flex flex-wrap gap-2 pt-2">
+                        <!-- Dates injected here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit Area -->
+            <div class="pt-4">
+                <button type="submit" id="submitBtn" 
+                    class="w-full bg-gradient-to-r from-royal to-luxury text-white font-bold py-4 rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2">
+                    <span id="btnText">Publish Job to Database</span>
+                    <svg id="loadingSpinner" class="hidden animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Alert Messages -->
+            <div id="alertBox" class="hidden rounded-lg p-4 mt-4 text-sm font-medium border">
+                <!-- Content injected via JS -->
+            </div>
+        </form>
+    </div>
+
+    <!-- Firebase SDK (v11.6.1 Modular CDN Imports) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
+        // Added updateDoc to handle editing
+        import { getFirestore, collection, addDoc, serverTimestamp, query, orderBy, limit, getDocs, where, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Your specific Firebase configuration
+        const firebaseConfig = {
+      apiKey: "AIzaSyBM8yMU7Zlo4_73MrM8OxEUMpvbQ4_M_Hg",
+      authDomain: "job-bazzar.firebaseapp.com",
+      projectId: "job-bazzar",
+      storageBucket: "job-bazzar.firebasestorage.app",
+      messagingSenderId: "494409654473",
+      appId: "1:494409654473:web:734bb79855085465c76d18",
+      measurementId: "G-RWDN5BZBBF"
+    };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getFirestore(app);
+
+        // DOM Elements
+        const jobForm = document.getElementById('jobForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const btnText = document.getElementById('btnText');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const alertBox = document.getElementById('alertBox');
+        
+        // Search & Delete Elements
+        const searchJobId = document.getElementById('searchJobId');
+        const searchBtn = document.getElementById('searchBtn');
+        const searchResult = document.getElementById('searchResult');
+        const resTitle = document.getElementById('resTitle');
+        const resCompany = document.getElementById('resCompany');
+        const deleteBtn = document.getElementById('deleteBtn');
+        const cancelEditBtn = document.getElementById('cancelEditBtn');
+        const searchAlert = document.getElementById('searchAlert');
+        
+        // Sponsored Elements
+        const tierRadios = document.getElementsByName('jobTier');
+        const sponsoredSettings = document.getElementById('sponsoredSettings');
+        const sponsoredDaysInput = document.getElementById('sponsoredDays');
+        const sponsorDateInput = document.getElementById('sponsorDateInput');
+        const addDateBtn = document.getElementById('addDateBtn');
+        const datesList = document.getElementById('datesList');
+        
+        // State variables
+        let currentEditDocId = null; // Store the firestore document ID for updates/deletions
+        let currentEditJobBazaarId = null; // Store JB-xxx for updates
+        let selectedDates = []; // Array to store optional sponsored dates
+
+        // Helper function to show alerts
+        function showAlert(message, type) {
+            alertBox.classList.remove('hidden', 'bg-green-50', 'text-green-800', 'border-green-200', 'bg-red-50', 'text-red-800', 'border-red-200');
+            if (type === 'success') {
+                alertBox.classList.add('bg-green-50', 'text-green-800', 'border-green-200');
+                alertBox.innerHTML = `<div class="flex items-center"><svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>${message}</div>`;
+            } else {
+                alertBox.classList.add('bg-red-50', 'text-red-800', 'border-red-200');
+                alertBox.innerHTML = `<div class="flex items-center"><svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>${message}</div>`;
+            }
+            alertBox.classList.remove('hidden');
+        }
+
+        // --- SPONSORED TIER LOGIC ---
+        // Toggle visibility
+        tierRadios.forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                if(e.target.value === 'Sponsored') {
+                    sponsoredSettings.classList.remove('hidden');
+                } else {
+                    sponsoredSettings.classList.add('hidden');
+                }
+            });
+        });
+
+        // Add optional dates
+        function renderDates() {
+            datesList.innerHTML = '';
+            selectedDates.forEach((dateStr, index) => {
+                const chip = document.createElement('div');
+                chip.className = "bg-white border border-luxury/30 text-royal text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-2 shadow-sm";
+                chip.innerHTML = `
+                    ${dateStr} 
+                    <button type="button" class="text-luxury hover:text-red-800 text-lg leading-none" onclick="removeDate(${index})">&times;</button>
+                `;
+                datesList.appendChild(chip);
+            });
+        }
+
+        window.removeDate = function(index) {
+            selectedDates.splice(index, 1);
+            renderDates();
+        }
+
+        addDateBtn.addEventListener('click', () => {
+            const dateVal = sponsorDateInput.value;
+            if (dateVal && !selectedDates.includes(dateVal)) {
+                selectedDates.push(dateVal);
+                renderDates();
+                sponsorDateInput.value = ''; // clear input
+            }
+        });
+
+        // --- RESET FORM FUNCTION ---
+        function resetToNewMode() {
+            jobForm.reset();
+            currentEditDocId = null;
+            currentEditJobBazaarId = null;
+            document.getElementById('jobBazaarId').value = "Auto-generated on publish";
+            btnText.innerText = "Publish Job to Database";
+            searchResult.classList.add('hidden');
+            searchResult.classList.remove('flex');
+            cancelEditBtn.classList.add('hidden');
+            
+            // Reset Sponsored
+            document.querySelector('input[name="jobTier"][value="Regular"]').checked = true;
+            sponsoredSettings.classList.add('hidden');
+            selectedDates = [];
+            renderDates();
+        }
+
+        cancelEditBtn.addEventListener('click', resetToNewMode);
+
+        // --- SEARCH & EDIT JOB LOGIC ---
+        searchBtn.addEventListener('click', async () => {
+            const queryId = searchJobId.value.trim().toUpperCase();
+            if(!queryId) return;
+            
+            searchBtn.disabled = true;
+            searchBtn.innerText = "Searching...";
+            searchAlert.classList.add('hidden');
+            
+            try {
+                // Query firestore where jobBazaarId matches the input
+                const jobsRef = collection(db, "jobs");
+                const q = query(jobsRef, where("jobBazaarId", "==", queryId));
+                const querySnapshot = await getDocs(q);
+                
+                if(querySnapshot.empty) {
+                    searchAlert.innerHTML = `<span class="text-red-600">No job found with ID: ${queryId}</span>`;
+                    searchAlert.classList.remove('hidden');
+                    resetToNewMode();
+                } else {
+                    // Job Found! Auto-fill everything
+                    const jobDoc = querySnapshot.docs[0];
+                    const jobData = jobDoc.data();
+                    
+                    // Set IDs
+                    currentEditDocId = jobDoc.id; 
+                    currentEditJobBazaarId = jobData.jobBazaarId;
+                    document.getElementById('jobBazaarId').value = jobData.jobBazaarId;
+                    
+                    // Fill standard fields (falling back to empty strings if missing)
+                    document.getElementById('companyName').value = jobData.companyName || '';
+                    document.getElementById('title').value = jobData.title || '';
+                    document.getElementById('shortDesc').value = jobData.shortDesc || '';
+                    document.getElementById('fullDesc').value = jobData.fullDesc || '';
+                    document.getElementById('salary').value = jobData.salary || '';
+                    document.getElementById('location').value = jobData.location || '';
+                    document.getElementById('type').value = jobData.type || '';
+                    document.getElementById('workModel').value = jobData.workModel || '';
+                    document.getElementById('experience').value = jobData.experience || '';
+                    document.getElementById('addedDate').value = jobData.addedDate || '';
+                    document.getElementById('jobLink').value = jobData.jobLink || '';
+                    
+                    // Fill Sponsored Fields
+                    if(jobData.tier === 'Sponsored') {
+                        document.querySelector('input[name="jobTier"][value="Sponsored"]').checked = true;
+                        sponsoredSettings.classList.remove('hidden');
+                        sponsoredDaysInput.value = jobData.sponsoredDays || '';
+                        selectedDates = jobData.sponsoredDates || [];
+                        renderDates();
+                    } else {
+                        document.querySelector('input[name="jobTier"][value="Regular"]').checked = true;
+                        sponsoredSettings.classList.add('hidden');
+                        selectedDates = [];
+                        renderDates();
+                    }
+
+                    // Update Top UI
+                    resTitle.innerText = `${jobData.title || 'Untitled'} (${jobData.jobBazaarId})`;
+                    resCompany.innerText = jobData.companyName || 'No Company';
+                    
+                    searchResult.classList.remove('hidden');
+                    searchResult.classList.add('flex');
+                    cancelEditBtn.classList.remove('hidden');
+                    
+                    // Change submit button to update mode
+                    btnText.innerText = `Update ${jobData.jobBazaarId}`;
+                    
+                    // Scroll to form smoothly
+                    jobForm.scrollIntoView({ behavior: 'smooth' });
+                }
+            } catch (error) {
+                console.error("Search Error:", error);
+                searchAlert.innerHTML = `<span class="text-red-600">Error searching: ${error.message}</span>`;
+                searchAlert.classList.remove('hidden');
+            } finally {
+                searchBtn.disabled = false;
+                searchBtn.innerText = "Search";
+            }
+        });
+
+        // --- DELETE JOB LOGIC ---
+        deleteBtn.addEventListener('click', async () => {
+            if(!currentEditDocId) return;
+            
+            const confirmDelete = confirm(`Are you sure you want to permanently delete ${currentEditJobBazaarId}?`);
+            if(!confirmDelete) return;
+            
+            deleteBtn.disabled = true;
+            deleteBtn.innerText = "Deleting...";
+            
+            try {
+                await deleteDoc(doc(db, "jobs", currentEditDocId));
+                
+                searchJobId.value = '';
+                searchAlert.innerHTML = `<span class="text-green-600">Job ${currentEditJobBazaarId} successfully deleted.</span>`;
+                searchAlert.classList.remove('hidden');
+                
+                resetToNewMode(); // Clear form since job is gone
+                
+            } catch (error) {
+                console.error("Delete Error:", error);
+                alert(`Error deleting: ${error.message}`);
+            } finally {
+                deleteBtn.disabled = false;
+                deleteBtn.innerText = "Delete Job";
+            }
+        });
+
+        // --- SUBMIT (CREATE OR UPDATE) LOGIC ---
+        jobForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            submitBtn.disabled = true;
+            submitBtn.classList.add('opacity-75', 'cursor-not-allowed');
+            loadingSpinner.classList.remove('hidden');
+            alertBox.classList.add('hidden');
+
+            try {
+                // Gather Base Data
+                const tierSelection = document.querySelector('input[name="jobTier"]:checked').value;
+                const jobData = {
+                    companyName: document.getElementById('companyName').value.trim(),
+                    title: document.getElementById('title').value.trim(),
+                    shortDesc: document.getElementById('shortDesc').value.trim(),
+                    fullDesc: document.getElementById('fullDesc').value.trim(),
+                    salary: document.getElementById('salary').value.trim(),
+                    location: document.getElementById('location').value.trim(),
+                    type: document.getElementById('type').value,
+                    workModel: document.getElementById('workModel').value,
+                    experience: document.getElementById('experience').value.trim(),
+                    addedDate: document.getElementById('addedDate').value,
+                    jobLink: document.getElementById('jobLink').value.trim(),
+                    tier: tierSelection
+                };
+                
+                // Add Sponsored Details if applicable
+                if (tierSelection === 'Sponsored') {
+                    // if it's empty parse to NaN, otherwise keep integer value.
+                    let daysVal = document.getElementById('sponsoredDays').value;
+                    jobData.sponsoredDays = daysVal ? parseInt(daysVal) : null;
+                    jobData.sponsoredDates = selectedDates; // array of date strings
+                } else {
+                    // clear them out if reverting back to regular
+                    jobData.sponsoredDays = null;
+                    jobData.sponsoredDates = [];
+                }
+
+                // Check Mode: UPDATE vs CREATE
+                if (currentEditDocId) {
+                    // UPDATE MODE
+                    btnText.innerText = "Updating Job...";
+                    
+                    const jobRef = doc(db, "jobs", currentEditDocId);
+                    await updateDoc(jobRef, jobData);
+                    
+                    showAlert(`Success! <b>${currentEditJobBazaarId}</b> updated successfully.`, 'success');
+                    
+                } else {
+                    // CREATE MODE
+                    btnText.innerText = "Generating ID & Publishing...";
+                    
+                    // 1. Generate the next sequential ID
+                    const jobsRef = collection(db, "jobs");
+                    const q = query(jobsRef, orderBy("jobIdNumber", "desc"), limit(1));
+                    const querySnapshot = await getDocs(q);
+                    
+                    let nextIdNum = 1;
+                    if (!querySnapshot.empty) {
+                        const lastJob = querySnapshot.docs[0].data();
+                        if (lastJob.jobIdNumber) {
+                            nextIdNum = lastJob.jobIdNumber + 1;
+                        }
+                    }
+                    
+                    const generatedJobId = "JB-" + nextIdNum.toString().padStart(3, '0');
+                    
+                    // Inject creation-specific fields
+                    jobData.jobBazaarId = generatedJobId;
+                    jobData.jobIdNumber = nextIdNum;
+                    jobData.createdAt = serverTimestamp(); 
+                    
+                    await addDoc(collection(db, "jobs"), jobData);
+                    
+                    showAlert(`Success! Published new job as <b>${generatedJobId}</b>`, 'success');
+                }
+                
+                resetToNewMode(); // Clean up form after success
+                
+                setTimeout(() => {
+                    alertBox.classList.add('hidden');
+                }, 5000);
+
+            } catch (error) {
+                console.error("Error submitting document: ", error);
+                showAlert(`Error processing job: ${error.message}`, 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('opacity-75', 'cursor-not-allowed');
+                btnText.innerText = currentEditDocId ? `Update ${currentEditJobBazaarId}` : "Publish Job to Database";
+                loadingSpinner.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
