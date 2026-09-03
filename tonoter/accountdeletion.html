@@ -1,1 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Tonoter - Account & Data Deletion Request</title>
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
 
+    <style>
+        * {
+            -webkit-tap-highlight-color: transparent;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f8fafc;
+        }
+
+        /* Glass Nav */
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        /* Toast notification */
+        #toastNotification {
+            transition: opacity 0.2s ease-out, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translate(-50%, -25px);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .btn-spinner {
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid #ffffff;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            animation: spin 0.7s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="text-slate-900 bg-slate-50 min-h-screen pb-24 selection:bg-rose-500 selection:text-white relative">
+
+    <!-- Toast Notification Banner -->
+    <div id="toastNotification" class="fixed top-4 left-1/2 -translate-x-1/2 z-[100] max-w-xs w-[90%] px-4 py-2.5 rounded-2xl shadow-2xl text-xs font-bold flex items-center gap-2 bg-slate-900 text-white border border-white/10">
+        <i id="toastIcon" class="fa-solid fa-circle-check text-cyan-400"></i>
+        <span id="toastMsg">Updated successfully</span>
+    </div>
+
+    <!-- TOP HEADER -->
+    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-100">
+        <div class="max-w-md mx-auto px-4 h-14 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <a href="index.html" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center transition active:scale-95">
+                    <i class="fa-solid fa-arrow-left text-xs"></i>
+                </a>
+                <span class="text-base font-black tracking-tight bg-gradient-to-r from-blue-900 via-blue-700 to-cyan-500 bg-clip-text text-transparent">
+                    Tonoter
+                </span>
+            </div>
+
+            <span class="text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200 flex items-center gap-1">
+                <i class="fa-solid fa-triangle-exclamation text-[9px]"></i>
+                <span>Data Deletion</span>
+            </span>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-md mx-auto px-4 pt-4 space-y-4">
+
+        <!-- Policy Overview Card -->
+        <section class="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm space-y-3">
+            <div class="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center text-xl mx-auto border border-rose-100">
+                <i class="fa-solid fa-trash-can"></i>
+            </div>
+            <div class="text-center space-y-1">
+                <h1 class="text-base font-black text-slate-900">Account & Data Deletion Request</h1>
+                <p class="text-xs text-slate-500 font-medium">Google Play Store Compliance & Privacy Rights</p>
+            </div>
+
+            <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 text-xs text-slate-700 space-y-2 leading-relaxed">
+                <p class="font-bold text-slate-900">What happens when you delete your account?</p>
+                <ul class="list-disc pl-4 space-y-1 text-[11px] text-slate-600">
+                    <li>Your user profile, username, bio, and avatar are permanently removed.</li>
+                    <li>All published notes, polls, comments, and replies are permanently purged.</li>
+                    <li>All bookmarks, voting history, and follower connections are deleted.</li>
+                    <li>This action is <strong>permanent and irreversible</strong>. Data cannot be recovered once deleted.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- SECTION A: INSTANT SELF-SERVICE DELETION (IF LOGGED IN) -->
+        <section id="loggedInDeletionSection" class="hidden bg-white rounded-3xl p-5 border border-slate-100 shadow-sm space-y-3 text-center">
+            <div class="flex items-center gap-2.5 p-3 rounded-2xl bg-blue-50 border border-blue-100 text-left">
+                <div class="w-8 h-8 rounded-xl bg-blue-600 text-white flex items-center justify-center text-sm font-bold shrink-0" id="userEmojiBadge">
+                    ⚡
+                </div>
+                <div class="min-w-0">
+                    <p class="text-xs font-black text-slate-900 truncate" id="loggedInUserName">Logged in user</p>
+                    <p class="text-[10px] text-slate-500 font-semibold truncate" id="loggedInUserEmail">email@example.com</p>
+                </div>
+            </div>
+
+            <div class="space-y-2 text-left pt-1">
+                <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-600">Type "DELETE" to confirm permanent erasure:</label>
+                <input type="text" id="instantDeleteInput" oninput="handleInstantDeleteInput(this.value)" placeholder="DELETE"
+                       class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-xs font-black tracking-widest text-center focus:border-rose-600 outline-none">
+            </div>
+
+            <button type="button" id="instantDeleteBtn" disabled onclick="executeInstantAccountDeletion()" 
+                    class="w-full py-3 rounded-xl bg-rose-600 disabled:bg-slate-200 hover:bg-rose-700 text-white disabled:text-slate-400 text-xs font-bold shadow-md shadow-rose-600/20 disabled:shadow-none active:scale-95 transition flex items-center justify-center">
+                <span>Permanently Delete My Account</span>
+            </button>
+        </section>
+
+        <!-- SECTION B: WEB REQUEST FORM (FOR USERS WHO UNINSTALLED THE APP) -->
+        <section id="webRequestDeletionSection" class="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm space-y-3">
+            <div class="space-y-0.5">
+                <h3 class="text-xs font-black text-slate-900">Web Deletion Request Form</h3>
+                <p class="text-[11px] text-slate-500">Use this form if you have already uninstalled the application or cannot log in.</p>
+            </div>
+
+            <form onsubmit="submitWebDeletionRequest(event)" class="space-y-3 pt-1">
+                <div>
+                    <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-600 mb-1">Registered Email Address *</label>
+                    <input type="email" id="webRequestEmail" required placeholder="name@example.com"
+                           class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-xs font-semibold focus:bg-white focus:border-rose-600 outline-none transition">
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-600 mb-1">Username / Handle *</label>
+                    <div class="relative flex items-center">
+                        <span class="absolute left-3 text-slate-400 text-xs font-bold">@</span>
+                        <input type="text" id="webRequestUsername" required placeholder="username"
+                               class="w-full pl-7 pr-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-xs font-semibold focus:bg-white focus:border-rose-600 outline-none transition">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-600 mb-1">Reason for Deletion (Optional)</label>
+                    <textarea id="webRequestReason" rows="2" placeholder="Let us know why you are leaving..."
+                              class="w-full p-3 rounded-xl border border-slate-200 bg-slate-50 text-xs focus:bg-white focus:border-rose-600 outline-none transition resize-none"></textarea>
+                </div>
+
+                <button type="submit" id="webRequestSubmitBtn" 
+                        class="w-full py-3 rounded-xl bg-slate-900 hover:bg-slate-800 active:scale-95 text-white font-bold text-xs shadow-md transition flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-paper-plane text-[10px]"></i>
+                    <span>Submit Deletion Request</span>
+                </button>
+            </form>
+        </section>
+
+        <!-- Footer Company Info -->
+        <p class="text-center text-[10px] text-slate-400 font-semibold pt-2">
+            Tonoter Application • Operated by <strong class="text-slate-600">appsee</strong> (<a href="https://appsee.in" target="_blank" class="underline">appsee.in</a>)
+        </p>
+
+    </main>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDegu9BR1OYHcEtIwdhNDTJ3Hc6Yy6MVP4",
+            authDomain: "globalconstructionappsee.firebaseapp.com",
+            projectId: "globalconstructionappsee",
+            storageBucket: "globalconstructionappsee.firebasestorage.app",
+            messagingSenderId: "149447507856",
+            appId: "1:149447507856:web:1c834fb82c76a577463d15",
+            measurementId: "G-1L1MRXV91G"
+        };
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        let currentUser = null;
+        let currentUserProfile = null;
+        let toastTimer = null;
+
+        function showToast(msg, isSuccess = true) {
+            const toast = document.getElementById('toastNotification');
+            const txt = document.getElementById('toastMsg');
+            const icon = document.getElementById('toastIcon');
+
+            if (toastTimer) clearTimeout(toastTimer);
+
+            txt.innerText = msg;
+            if (isSuccess) {
+                toast.className = "fixed top-4 left-1/2 z-[100] max-w-xs w-[90%] px-4 py-2.5 rounded-2xl shadow-2xl text-xs font-bold flex items-center gap-2 bg-slate-900 text-white border border-white/10";
+                icon.className = "fa-solid fa-circle-check text-cyan-400 text-sm";
+            } else {
+                toast.className = "fixed top-4 left-1/2 z-[100] max-w-xs w-[90%] px-4 py-2.5 rounded-2xl shadow-2xl text-xs font-bold flex items-center gap-2 bg-rose-950 border border-rose-600/40 text-rose-300";
+                icon.className = "fa-solid fa-circle-exclamation text-rose-400 text-sm";
+            }
+
+            toast.style.opacity = '1';
+            toast.style.transform = 'translate(-50%, 0px)';
+
+            toastTimer = setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translate(-50%, -25px)';
+            }, 800);
+        }
+
+        // Check Auth State on Load
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                currentUser = user;
+                try {
+                    const docSnap = await db.collection('users').doc(user.uid).get();
+                    if (docSnap.exists) {
+                        currentUserProfile = docSnap.data();
+                        document.getElementById('userEmojiBadge').innerText = currentUserProfile.avatarEmoji || '⚡';
+                        document.getElementById('loggedInUserName').innerText = currentUserProfile.fullName || 'Tonoter User';
+                        document.getElementById('loggedInUserEmail').innerText = user.email || '@' + currentUserProfile.username;
+                    }
+                } catch (e) {
+                    document.getElementById('loggedInUserName').innerText = 'Authenticated User';
+                    document.getElementById('loggedInUserEmail').innerText = user.email || user.uid;
+                }
+
+                document.getElementById('loggedInDeletionSection').classList.remove('hidden');
+                // Pre-fill web form if desired
+                document.getElementById('webRequestEmail').value = user.email || '';
+            }
+        });
+
+        function handleInstantDeleteInput(val) {
+            const btn = document.getElementById('instantDeleteBtn');
+            btn.disabled = val.trim().toUpperCase() !== 'DELETE';
+        }
+
+        // Execute Instant Account Deletion
+        async function executeInstantAccountDeletion() {
+            if (!currentUser) return;
+            const btn = document.getElementById('instantDeleteBtn');
+
+            btn.disabled = true;
+            btn.innerHTML = `<div class="btn-spinner"></div> <span>Erasing All Data...</span>`;
+
+            try {
+                const uid = currentUser.uid;
+
+                // 1. Delete all user posts and comments
+                const postsSnap = await db.collection('posts').where('authorId', '==', uid).get();
+                const promises = [];
+                postsSnap.forEach(doc => promises.push(doc.ref.delete()));
+                await Promise.all(promises);
+
+                // 2. Delete user polls
+                try {
+                    const pollsSnap = await db.collection('polls').where('authorId', '==', uid).get();
+                    const pollPromises = [];
+                    pollsSnap.forEach(doc => pollPromises.push(doc.ref.delete()));
+                    await Promise.all(pollPromises);
+                } catch (e) {}
+
+                // 3. Delete user profile document
+                await db.collection('users').doc(uid).delete();
+
+                // 4. Clear local caches
+                localStorage.clear();
+
+                // 5. Delete Firebase Auth account
+                try {
+                    await currentUser.delete();
+                } catch (err) {
+                    await auth.signOut();
+                }
+
+                window.location.href = 'login.html';
+
+            } catch (err) {
+                console.error("Deletion error:", err);
+                showToast("Deletion failed: " + (err.message || 'Please try again'), false);
+                btn.disabled = false;
+                btn.innerHTML = `<span>Permanently Delete My Account</span>`;
+            }
+        }
+
+        // Submit Web Deletion Request (for logged-out users)
+        async function submitWebDeletionRequest(e) {
+            e.preventDefault();
+            const email = document.getElementById('webRequestEmail').value.trim();
+            const username = document.getElementById('webRequestUsername').value.trim().replace('@', '');
+            const reason = document.getElementById('webRequestReason').value.trim();
+            const btn = document.getElementById('webRequestSubmitBtn');
+
+            if (!email || !username) {
+                showToast("Please provide your email and username", false);
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = `<div class="btn-spinner"></div> <span>Submitting Request...</span>`;
+
+            try {
+                await db.collection('account_deletion_requests').add({
+                    email: email,
+                    username: username,
+                    reason: reason || null,
+                    status: 'pending',
+                    submittedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    submittedAtClient: new Date().toISOString()
+                });
+
+                document.getElementById('webRequestEmail').value = '';
+                document.getElementById('webRequestUsername').value = '';
+                document.getElementById('webRequestReason').value = '';
+
+                showToast("Deletion request submitted successfully. Our privacy team will process it within 48 hours.");
+
+            } catch (err) {
+                console.error("Request submit error:", err);
+                showToast("Failed to submit request", false);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fa-solid fa-paper-plane text-[10px]"></i> <span>Submit Deletion Request</span>`;
+            }
+        }
+    </script>
+</body>
+</html>
