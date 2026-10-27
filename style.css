@@ -169,3 +169,12 @@ footer{border-top:1px solid var(--line);padding:2.25rem 0;background:#fff}
 .reach{display:grid;grid-template-columns:repeat(auto-fit,minmax(18rem,1fr));gap:2rem}
 .reach h3{font-size:1.1rem;color:var(--primary)}
 .reach .langs{margin-top:.7rem}
+
+/* ---- v6: top price bar ---- */
+.topbar{height:2.25rem;display:flex;align-items:center;justify-content:center;background:var(--ink);color:#fff;font-size:.85rem;font-weight:500;padding:0 1rem;text-align:center}
+.topbar b{font-weight:700;margin:0 .25em}
+html{scroll-padding-top:7.5rem}
+.hero{padding-top:10.5rem}
+.top{padding-top:10.75rem}
+@media(max-width:1000px){nav ul{top:100%;max-height:calc(100vh - 6.5rem)}}
+@media(max-width:700px){.hero{padding-top:9rem}}
