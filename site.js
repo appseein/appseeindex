@@ -100,7 +100,7 @@
       '<input class="hp" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">' +
       '<div class="full msg" role="status" aria-live="polite"></div>' +
       '<div class="full"><button class="btn" type="submit">Book now</button>' +
-      '<p class="small" style="margin-top:10px">Our executive will reach you soon. Your details are used only to contact you – see our <a href="policy.html">Privacy Policy</a>.</p></div>' +
+      '<p class="small" style="margin-top:10px">Our executive will reach you soon. Your details are used only to contact you – see our <a href="/policy.html">Privacy Policy</a>.</p></div>' +
       '</form>';
     var form = host.querySelector("form"), btn = form.querySelector("button"), box = form.querySelector(".msg");
     var say = function (cls, html) { box.className = "full msg " + cls; box.innerHTML = html; };
