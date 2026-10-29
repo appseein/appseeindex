@@ -7,7 +7,7 @@
 <meta name="description" content="Android app development, websites, UI/UX design, Play Store publishing and Firebase backend services from AppSee for clients across India and worldwide. Apps in Tamil, Hindi and all languages.">
 <meta name="robots" content="index,follow,max-image-preview:large">
 <link rel="canonical" href="https://appsee.in/service.html">
-<link rel="alternate" hreflang="x-default" href="https://appsee.in/"><link rel="alternate" hreflang="en-IN" href="https://appsee.in/"><link rel="alternate" hreflang="en-US" href="https://appsee.in/usa/"><link rel="alternate" hreflang="en-GB" href="https://appsee.in/uk/"><link rel="alternate" hreflang="en-AE" href="https://appsee.in/uae/"><link rel="alternate" hreflang="en-SA" href="https://appsee.in/saudi-arabia/"><link rel="alternate" hreflang="en-QA" href="https://appsee.in/qatar/"><link rel="alternate" hreflang="en-SG" href="https://appsee.in/singapore/"><link rel="alternate" hreflang="en-MY" href="https://appsee.in/malaysia/"><link rel="alternate" hreflang="en-AU" href="https://appsee.in/australia/"><link rel="alternate" hreflang="en-CA" href="https://appsee.in/canada/"><link rel="alternate" hreflang="en-DE" href="https://appsee.in/germany/"><link rel="alternate" hreflang="en-LK" href="https://appsee.in/sri-lanka/"><link rel="alternate" hreflang="ta" href="https://appsee.in/ta/"><link rel="alternate" hreflang="hi" href="https://appsee.in/hi/"><link rel="alternate" hreflang="ar" href="https://appsee.in/ar/"><link rel="alternate" hreflang="es" href="https://appsee.in/es/"><link rel="alternate" hreflang="fr" href="https://appsee.in/fr/"><link rel="alternate" hreflang="de" href="https://appsee.in/de/"><link rel="icon" type="image/png" href="appsee.png">
+<link rel="icon" type="image/png" href="appsee.png">
 <meta property="og:site_name" content="AppSee">
 <meta property="og:type" content="website">
 <meta property="og:title" content="App Development & Web Services – AppSee, India">
@@ -18,12 +18,205 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<style>
+:root{--primary:#0b4fa8;--secondary:#1a7fd4;--light:#e8f0fc;--ink:#05203a;--muted:#4a6577;--line:#e3ebf3;--grad:linear-gradient(135deg,var(--primary),var(--secondary))}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:5.25rem}
+body{font-family:'Poppins','Noto Sans Tamil','Noto Sans Devanagari',system-ui,sans-serif;background:#f7fbff;color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--secondary);outline-offset:2px}
+.wrap{max-width:72.5rem;margin:0 auto;padding:0 6%}
+.grad-text{background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+
+header{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,.95);backdrop-filter:blur(0.75rem);border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;justify-content:space-between;height:4.25rem}
+.logo{font-size:1.6875rem;font-weight:800;text-decoration:none}
+nav ul{list-style:none;display:flex;gap:2px;align-items:center}
+nav a{white-space:nowrap;text-decoration:none;font-weight:500;font-size:0.90625rem;padding:0.5rem 0.6875rem;border-radius:0.5rem;color:#09304a;transition:background .2s}
+nav a:hover,nav a[aria-current]{background:var(--light);color:var(--primary)}
+nav a.btn,nav a.btn:hover{color:#fff;background:var(--grad);margin-left:0.5rem;padding:0.625rem 1.25rem}
+.menu-btn{display:none;width:2.75rem;height:2.75rem;border-radius:0.625rem;background:var(--light);border:0;color:var(--primary);font-size:1.375rem;cursor:pointer}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:0.5rem;padding:0.8125rem 1.75rem;border-radius:62.4375rem;border:2px solid transparent;font:600 0.9375rem 'Poppins',sans-serif;background:var(--grad);color:#fff;cursor:pointer;text-decoration:none;box-shadow:0 0.5rem 1.375rem rgba(5,32,58,.16);transition:transform .2s,box-shadow .2s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 0.75rem 1.75rem rgba(5,32,58,.22)}
+.btn:active{transform:scale(.97)}
+.btn.ghost{background:#fff;color:var(--primary);border-color:var(--primary);box-shadow:none}
+.btn[disabled]{opacity:.6;cursor:wait;transform:none}
+.actions{display:flex;gap:0.75rem;flex-wrap:wrap;margin-top:1.625rem}
+
+section{padding:4.75rem 0}
+.alt{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.top{padding-top:8.5rem}
+h1{font-size:clamp(2.125rem,5vw,3.25rem);line-height:1.1;letter-spacing:-.02em;margin-bottom:1rem}
+h2{font-size:clamp(1.625rem,3.4vw,2.125rem);line-height:1.2;margin-bottom:0.625rem;letter-spacing:-.01em}
+.lead{color:var(--muted);max-width:38.75rem;margin-bottom:2.375rem;font-size:1.03125rem}
+.hero{padding:8.25rem 0 4.5rem;background:linear-gradient(135deg,var(--light),#f7fbff)}
+.hero .wrap{display:grid;grid-template-columns:1.25fr .75fr;gap:2.75rem;align-items:center}
+.hero p.lead{margin-bottom:0}
+.hero-card{background:#fff;border:1px solid var(--line);border-radius:1.25rem;padding:1.75rem;box-shadow:0 1.125rem 2.75rem rgba(5,32,58,.1)}
+.hero-card h2{font-size:1.25rem}
+.ticks{list-style:none;margin:0.875rem 0 0}
+.ticks li{padding:0.375rem 0 0.375rem 1.75rem;position:relative;font-size:0.9375rem;color:var(--muted)}
+.ticks li::before{content:"✓";position:absolute;left:0;color:var(--primary);font-weight:700}
+
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;padding:2.125rem 0;max-width:40rem;margin:0 auto}
+.stat{background:#fff;border:1px solid var(--line);border-radius:0.875rem;padding:1.25rem;text-align:center}
+.stat b{display:block;font-size:2.25rem;line-height:1.2;font-weight:800}
+.stat>span{color:var(--muted);font-size:0.875rem}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(16.25rem,1fr));gap:1.25rem}
+.card{background:#fff;border:1px solid var(--line);border-radius:0.875rem;padding:1.625rem}
+.card h3{font-size:1.1875rem;margin-bottom:0.5rem;color:var(--primary)}
+.card p{color:var(--muted);font-size:0.9375rem}
+.more{margin-top:1.875rem}
+
+.plan{display:flex;flex-direction:column;position:relative}
+.plan.best{border:2px solid var(--primary)}
+.plan .tag{position:absolute;top:-13px;left:1.5rem;background:var(--grad);color:#fff;font-size:0.75rem;font-weight:600;padding:3px 0.75rem;border-radius:62.4375rem}
+.price{font-size:2.375rem;font-weight:800;line-height:1.2;margin:0.375rem 0 0.25rem}
+.price small{font-size:0.9375rem;font-weight:500;color:var(--muted)}
+.plan .ticks{flex:1;margin-bottom:1.25rem}
+.note{margin-top:1.375rem;color:var(--muted);font-size:0.875rem}
+
+.steps{list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(13.75rem,1fr));gap:1.25rem;counter-reset:s}
+.steps li{counter-increment:s;background:#fff;border:1px solid var(--line);border-radius:0.875rem;padding:1.5rem 1.5rem 1.5rem 1.5rem;position:relative}
+.steps li::before{content:counter(s);display:grid;place-items:center;width:2.125rem;height:2.125rem;border-radius:50%;background:var(--grad);color:#fff;font-weight:700;margin-bottom:0.75rem}
+.steps h3{font-size:1.0625rem;margin-bottom:0.25rem}.steps p{color:var(--muted);font-size:0.90625rem}
+
+.chips{display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1.5rem}
+.chip{padding:0.5rem 1.125rem;border-radius:62.4375rem;border:1px solid var(--line);background:#fff;font:500 0.875rem 'Poppins',sans-serif;cursor:pointer;transition:all .2s;color:var(--ink)}
+.chip:hover{border-color:var(--primary);color:var(--primary)}
+.chip[aria-pressed=true]{background:var(--grad);color:#fff;border-color:transparent}
+.apps{display:grid;grid-template-columns:repeat(auto-fill,minmax(12.5rem,1fr));gap:1rem}
+.app{display:flex;flex-direction:column;align-items:center;text-align:center;gap:0.5rem;background:#fff;border:1px solid var(--line);border-radius:1rem;padding:1.375rem 1rem;text-decoration:none;transition:transform .25s,box-shadow .25s}
+.app:hover{transform:translateY(-5px);box-shadow:0 1rem 2.25rem rgba(5,32,58,.12)}
+.app[hidden]{display:none}
+.ico{width:3.875rem;height:3.875rem;border-radius:1rem;background:var(--light);display:grid;place-items:center;font-size:1.875rem}
+.app h3{font-size:0.90625rem;line-height:1.35;min-height:2.5rem}
+.app span{font-size:0.78125rem;font-weight:600;color:var(--primary)}
+
+details{background:#fff;border:1px solid var(--line);border-radius:0.75rem;margin-bottom:0.625rem}
+summary{cursor:pointer;padding:1rem 1.25rem;font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:0.75rem}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-size:1.375rem;line-height:1;color:var(--primary);transition:transform .25s}
+details[open] summary::after{transform:rotate(45deg)}
+details p{padding:0 1.25rem 1.125rem;color:var(--muted);font-size:0.9375rem}
+
+.split{display:grid;grid-template-columns:.85fr 1.15fr;gap:2.5rem;align-items:start}
+.box{background:#fff;border:1px solid var(--line);border-radius:1.125rem;padding:1.75rem}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:0.875rem}
+.form .full{grid-column:1/-1}
+.form label{display:block;font-size:0.84375rem;font-weight:600;margin-bottom:0.3125rem}
+.form input,.form select,.form textarea{width:100%;padding:0.75rem 0.875rem;border:1px solid #c9d7e3;border-radius:0.625rem;font:400 0.9375rem 'Poppins',sans-serif;background:#fff;color:var(--ink)}
+.form input:focus,.form select:focus,.form textarea:focus{outline:2px solid var(--secondary);border-color:transparent}
+.form textarea{min-height:6.875rem;resize:vertical}
+.hp{position:absolute;left:-9999px}
+.msg{padding:0.875rem 1rem;border-radius:0.625rem;font-size:0.90625rem;display:none}
+.msg.ok{display:block;background:#e7f7ee;color:#14532d}
+.msg.err{display:block;background:#fdecec;color:#7f1d1d}
+.small{font-size:0.78125rem;color:var(--muted)}
+.contact-list p{margin-bottom:0.75rem;color:var(--muted)}.contact-list .btn{padding:0.625rem 1.375rem;font-size:0.9375rem}.contact-list strong{color:var(--ink)}
+
+.prose h2{margin-top:1.875rem;font-size:1.375rem}
+.prose p,.prose li{color:var(--muted);margin-bottom:0.75rem}
+.prose ul{padding-left:1.375rem}
+
+footer{border-top:1px solid var(--line);padding:2.25rem 0;background:#fff}
+.foot{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1.125rem;font-size:0.875rem;color:var(--muted)}
+.foot nav ul{flex-wrap:wrap}
+.foot li span{padding:0.25rem 0.5rem}
+.foot a{color:var(--primary);font-weight:500;text-decoration:none;padding:0.25rem 0.5rem}
+
+.js .reveal{opacity:0;transform:translateY(1.125rem);transition:opacity .6s ease-out,transform .6s ease-out}
+.js .reveal.show{opacity:1;transform:none}
+
+@media(max-width:1000px){
+  .menu-btn{display:block}
+  nav ul{position:absolute;top:4.25rem;left:0;right:0;flex-direction:column;align-items:stretch;background:#fff;padding:0.625rem 6% 1.25rem;max-height:calc(100vh - 4.25rem);overflow-y:auto;box-shadow:0 1.125rem 1.875rem rgba(5,32,58,.12);border-bottom:1px solid var(--line);display:none}
+  nav.open ul{display:flex}
+  nav a{padding:0.8125rem 0.75rem;font-size:1rem}
+  nav a.btn,nav a.btn:hover{margin:0.5rem 0 0}
+  .hero .wrap,.split{grid-template-columns:1fr}
+}
+@media(max-width:560px){.form{grid-template-columns:1fr}section{padding:3.5rem 0}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}.js .reveal{opacity:1;transform:none}}
+@media(max-width:1180px){nav a{padding:0.5rem 0.5rem;font-size:0.875rem}nav a.btn,nav a.btn:hover{padding:0.5625rem 1rem}}
+@media(min-width:1600px){html{font-size:112.5%}}
+@media(min-width:2200px){html{font-size:150%}}
+@media(min-width:3000px){html{font-size:200%}}
+
+/* ---- v3: one highlighted action, richer visuals ---- */
+.btn.pulse{animation:glow 2.6s ease-out infinite}
+@keyframes glow{0%{box-shadow:0 8px 22px rgba(5,32,58,.18),0 0 0 0 var(--secondary)}70%{box-shadow:0 8px 22px rgba(5,32,58,.18),0 0 0 .8rem transparent}100%{box-shadow:0 8px 22px rgba(5,32,58,.18),0 0 0 0 transparent}}
+.chip[aria-pressed=true]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.steps li::before{background:var(--light);color:var(--primary)}
+.hero{position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;width:40rem;height:40rem;right:-12rem;top:-14rem;border-radius:50%;background:radial-gradient(circle,var(--light),transparent 65%)}
+.hero .wrap{position:relative}
+.langs{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.7rem}
+.langs span{padding:.3rem .9rem;border-radius:999px;background:#fff;border:1px solid var(--line);font-size:.9rem;font-weight:500}
+.phone{width:15rem;margin:0 auto;aspect-ratio:9/18.5;background:#0b1b2b;border-radius:2.2rem;padding:.7rem;box-shadow:0 30px 60px rgba(5,32,58,.25);transform:rotate(4deg);animation:float 6s ease-in-out infinite}
+.phone .scr{height:100%;border-radius:1.6rem;background:linear-gradient(160deg,var(--light),#fff);padding:1.8rem 1rem 1rem;display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;align-content:start;position:relative}
+.phone .scr::before{content:"";position:absolute;top:.55rem;left:50%;width:3.2rem;height:.45rem;margin-left:-1.6rem;border-radius:9px;background:#0b1b2b}
+.phone .ico{width:100%;height:auto;aspect-ratio:1;font-size:1.5rem;background:#fff;box-shadow:0 4px 10px rgba(5,32,58,.08);border-radius:.9rem}
+.phone .bar2{grid-column:1/-1;margin-top:.8rem;padding:.7rem;border-radius:.9rem;background:var(--grad);color:#fff;font-size:.72rem;font-weight:600;text-align:center}
+@keyframes float{0%,100%{transform:rotate(4deg) translateY(0)}50%{transform:rotate(4deg) translateY(-.6rem)}}
+.ic{width:3rem;height:3rem;border-radius:.9rem;background:var(--light);display:grid;place-items:center;font-size:1.5rem;margin-bottom:.9rem}
+.card{transition:transform .25s,box-shadow .25s}
+.card:hover{transform:translateY(-4px);box-shadow:0 16px 34px rgba(5,32,58,.1)}
+.stat b{font-size:2.6rem}
+@media(max-width:700px){.hero-vis{display:none}.hero{padding-top:7.5rem}}
+@media(prefers-reduced-motion:reduce){.btn.pulse,.phone{animation:none}}
+
+/* ---- v4: Book now, form first, clean mobile menu ---- */
+.book-m{display:none}
+.formcard{padding:1.7rem;box-shadow:0 24px 50px rgba(5,32,58,.14);border-top:4px solid var(--primary)}
+.formcard h2{font-size:1.5rem;margin-bottom:.2rem}
+.formcard>.small{margin-bottom:1rem}
+.contact-list .mail{font-size:1.15rem;color:var(--ink)}
+.contact-list .mail a{color:var(--primary);font-weight:600}
+.contact-list .ph{font-size:.95rem}
+@media(min-width:1001px){.hero .wrap{grid-template-columns:1.05fr .95fr}}
+@media(max-width:1000px){
+  .cta-li{display:none}
+  .book-m{display:inline-flex;margin-left:auto;margin-right:.6rem;padding:.55rem 1.2rem;font-size:.9rem;white-space:nowrap}
+  nav ul{gap:0}
+  nav li+li a{border-top:1px solid var(--line)}
+  nav ul a{border-radius:0;padding:.9rem .4rem;font-size:1.05rem}
+}
+@media(max-width:560px){.formcard{padding:1.3rem}}
+
+/* ---- v5: where we work ---- */
+.reach{display:grid;grid-template-columns:repeat(auto-fit,minmax(18rem,1fr));gap:2rem}
+.reach h3{font-size:1.1rem;color:var(--primary)}
+.reach .langs{margin-top:.7rem}
+</style>
 <script>document.documentElement.classList.add('js');(function(){var T=[['#c0392b','#e74c3c','#fdf0ef'],['#b7410e','#e67e22','#fef5ec'],['#b8860b','#d4ac0d','#fdfaed'],['#1a5c38','#27ae60','#edfaf3'],['#0b4fa8','#1a7fd4','#e8f0fc'],['#2c2c8a','#5b4fcf','#eeecfb'],['#6a0dad','#9b59b6','#f5edf9']][new Date().getDay()],s=document.documentElement.style;s.setProperty('--primary',T[0]);s.setProperty('--secondary',T[1]);s.setProperty('--light',T[2])})()</script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "ProfessionalService", "@id": "https://appsee.in/#org", "name": "AppSee", "url": "https://appsee.in/", "logo": "https://appsee.in/appsee.png", "email": "appseeapps@gmail.com", "telephone": "+91-9159899932", "description": "Android app development, website, UI/UX design, Play Store publishing and app marketing company based in Tamil Nadu, India, serving clients across India (Chennai, Bangalore, Mumbai, Hyderabad, Delhi and more) and worldwide. Apps available in Tamil, Hindi, English and all languages.", "address": {"@type": "PostalAddress", "addressRegion": "Tamil Nadu", "addressCountry": "IN"}, "areaServed": ["India", "Tamil Nadu", "Karnataka", "Maharashtra", "Telangana", "Delhi", "Kerala", "Gujarat", "United States", "United Kingdom", "United Arab Emirates", "Singapore", "Malaysia", "Australia", "Canada", "Germany", "Saudi Arabia"], "availableLanguage": ["English", "Tamil", "Hindi"], "sameAs": ["https://www.linkedin.com/company/appseein", "https://www.instagram.com/appsee.in", "https://play.google.com/store/apps/dev?id=8949267805698097813"]}, {"@type": "Service", "serviceType": "App development", "provider": {"@id": "https://appsee.in/#org"}, "areaServed": "Worldwide"}]}</script>
+<link rel="alternate" hreflang="x-default" href="https://appsee.in/service.html">
+<link rel="alternate" hreflang="en-IN" href="https://appsee.in/service.html">
+<link rel="alternate" hreflang="ta" href="https://appsee.in/service.html?lang=ta">
+<link rel="alternate" hreflang="hi" href="https://appsee.in/service.html?lang=hi">
+<link rel="alternate" hreflang="ar" href="https://appsee.in/service.html?lang=ar">
+<link rel="alternate" hreflang="es" href="https://appsee.in/service.html?lang=es">
+<link rel="alternate" hreflang="fr" href="https://appsee.in/service.html?lang=fr">
+<link rel="alternate" hreflang="de" href="https://appsee.in/service.html?lang=de">
+<link rel="alternate" hreflang="en-US" href="https://appsee.in/service.html?c=US">
+<link rel="alternate" hreflang="en-GB" href="https://appsee.in/service.html?c=GB">
+<link rel="alternate" hreflang="en-AE" href="https://appsee.in/service.html?c=AE">
+<link rel="alternate" hreflang="en-AU" href="https://appsee.in/service.html?c=AU">
+<link rel="alternate" hreflang="en-CA" href="https://appsee.in/service.html?c=CA">
+<link rel="alternate" hreflang="en-SG" href="https://appsee.in/service.html?c=SG">
+<style>
+.asb{position:fixed;top:4.25rem;left:0;right:0;z-index:90;display:flex;gap:.6rem;justify-content:center;align-items:center;flex-wrap:wrap;padding:.3rem 6%;background:var(--ink);color:#fff;font-size:.82rem;line-height:1.3;text-align:center}
+.asb b{color:#ffd166}.asb-s{display:flex;gap:.4rem}
+.asb select{font:inherit;font-size:.78rem;padding:.15rem .3rem;border-radius:.4rem;border:0;background:#fff;color:var(--ink);max-width:8.5rem}
+html{scroll-padding-top:7.5rem}
+@media(max-width:700px){.top{padding-top:10.5rem}.hero{padding-top:10rem}}
+</style>
 </head>
 <body>
-<header><div class="topbar">App plans from <b>₹2,000</b> per month</div><div class="wrap bar">
+<header><div class="wrap bar">
 <a class="logo grad-text" href="index.html" aria-label="AppSee home">AppSee</a>
 <a class="btn book-m pulse" href="contact.html#start">Book now</a>
 <button class="menu-btn" aria-label="Open menu" aria-expanded="false">☰</button>
@@ -43,7 +236,219 @@
 <li><a href="https://www.instagram.com/appsee.in" target="_blank" rel="noopener">Instagram</a></li>
 <li><a href="mailto:appseeapps@gmail.com">appseeapps@gmail.com</a></li>
 <li><span>+91 9159899932</span></li>
-</ul></nav></div><nav aria-label="Countries"><ul><li><a href="/usa/">the USA</a></li><li><a href="/uk/">the United Kingdom</a></li><li><a href="/uae/">the UAE</a></li><li><a href="/dubai/">Dubai</a></li><li><a href="/saudi-arabia/">Saudi Arabia</a></li><li><a href="/qatar/">Qatar</a></li><li><a href="/singapore/">Singapore</a></li><li><a href="/malaysia/">Malaysia</a></li><li><a href="/australia/">Australia</a></li><li><a href="/canada/">Canada</a></li><li><a href="/germany/">Germany</a></li><li><a href="/sri-lanka/">Sri Lanka</a></li><li><a href="/ta/">TA</a></li><li><a href="/hi/">HI</a></li><li><a href="/ar/">AR</a></li><li><a href="/es/">ES</a></li><li><a href="/fr/">FR</a></li><li><a href="/de/">DE</a></li></ul></nav></footer>
-<script src="site.js" defer></script>
+</ul></nav></div></footer>
+<script>
+(function () {
+  var d = document;
+
+  /* ---------- Firebase config ---------- */
+  var FB = {
+    apiKey: "AIzaSyD_0QOZq26WJHM3JZBGCzC4Ik_rxrwbyTY",
+    authDomain: "appseeapp.firebaseapp.com",
+    projectId: "appseeapp",
+    storageBucket: "appseeapp.firebasestorage.app",
+    messagingSenderId: "228305327553",
+    appId: "1:228305327553:web:02e051da025846c500cb40",
+    measurementId: "G-KQTE2G7VRF"
+  };
+  var B = "https://www.gstatic.com/firebasejs/10.12.2/";
+  function load(src) {
+    return new Promise(function (ok, no) {
+      var s = d.createElement("script");
+      s.src = src; s.onload = ok; s.onerror = no; d.head.appendChild(s);
+    });
+  }
+  var initP, dbP;
+  function init() {
+    return initP || (initP = load(B + "firebase-app-compat.js").then(function () {
+      if (!firebase.apps.length) firebase.initializeApp(FB);
+      return load(B + "firebase-analytics-compat.js").then(function () {
+        try { firebase.analytics(); } catch (e) {}
+      }).catch(function () {});
+    }));
+  }
+  function db() {
+    return dbP || (dbP = init().then(function () { return load(B + "firebase-firestore-compat.js"); })
+      .then(function () { return firebase.firestore(); }));
+  }
+  window.addEventListener("load", function () { setTimeout(function () { init().catch(function () {}); if (d.querySelector("[data-lead-form]")) db().catch(function () {}); }, 800); });
+
+  /* ---------- Mobile menu ---------- */
+  var mb = d.querySelector(".menu-btn"), nav = d.querySelector("header nav");
+  if (mb && nav) {
+    var setOpen = function (o) {
+      nav.classList.toggle("open", o); mb.setAttribute("aria-expanded", o);
+      mb.textContent = o ? "✕" : "☰"; mb.setAttribute("aria-label", o ? "Close menu" : "Open menu");
+    };
+    mb.addEventListener("click", function (e) { e.stopPropagation(); setOpen(!nav.classList.contains("open")); });
+    nav.addEventListener("click", function (e) { if (e.target.closest("a")) setOpen(false); });
+    d.addEventListener("click", function (e) { if (!nav.contains(e.target)) setOpen(false); });
+    d.addEventListener("keydown", function (e) { if (e.key === "Escape") setOpen(false); });
+    window.addEventListener("resize", function () { if (innerWidth > 1000) setOpen(false); });
+  }
+
+  /* ---------- Reveal on scroll ---------- */
+  var rv = d.querySelectorAll(".reveal");
+  if ("IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("show"); io.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    rv.forEach(function (el) { io.observe(el); });
+  } else rv.forEach(function (el) { el.classList.add("show"); });
+  setTimeout(function () { rv.forEach(function (el) { el.classList.add("show"); }); }, 4000);
+
+  /* ---------- Counters (final value is already in the HTML, so crawlers never see 0) ---------- */
+  var still = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function count(el) {
+    var t = +el.dataset.target, s = performance.now(), D = 1200;
+    (function f(n) {
+      var p = Math.min((n - s) / D, 1);
+      el.textContent = p < 1 ? Math.round(t * (1 - Math.pow(1 - p, 3))) : t;
+      if (p < 1) requestAnimationFrame(f);
+    })(s);
+  }
+  var cs = d.querySelectorAll(".count");
+  if (cs.length && "IntersectionObserver" in window && !still) {
+    var co = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { count(e.target); co.unobserve(e.target); } });
+    }, { threshold: 0.6 });
+    cs.forEach(function (el) { co.observe(el); });
+  }
+
+  /* ---------- App filter ---------- */
+  d.querySelectorAll(".chip").forEach(function (c) {
+    c.addEventListener("click", function () {
+      d.querySelectorAll(".chip").forEach(function (x) { x.setAttribute("aria-pressed", x === c); });
+      d.querySelectorAll(".app").forEach(function (a) {
+        a.hidden = c.dataset.f !== "all" && a.dataset.cat !== c.dataset.f;
+      });
+    });
+  });
+
+  /* ---------- Lead form -> Firestore "leads" ---------- */
+  var host = d.querySelector("[data-lead-form]");
+  if (host) {
+    host.innerHTML =
+      '<form class="form" novalidate>' +
+      '<div><label for="f-name">Your name *</label><input id="f-name" name="name" autocomplete="name" required></div>' +
+      '<div><label for="f-phone">Phone *</label><input id="f-phone" name="phone" type="tel" autocomplete="tel" placeholder="+91 98765 43210" required></div>' +
+      '<div class="full"><label for="f-email">Email *</label><input id="f-email" name="email" type="email" autocomplete="email" required></div>' +
+      '<div class="full"><label for="f-service">What do you need?</label><select id="f-service" name="service">' +
+      '<option>Android app development</option><option>Website or admin dashboard</option><option>UI / UX design</option>' +
+      '<option>App marketing &amp; ASO</option><option>App maintenance and support</option><option>App in Tamil, Hindi or other languages</option><option>Something else</option></select></div>' +
+      '<div class="full"><label for="f-msg">Tell us about your project</label><textarea id="f-msg" name="message"></textarea></div>' +
+      '<input class="hp" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">' +
+      '<div class="full msg" role="status" aria-live="polite"></div>' +
+      '<div class="full"><button class="btn" type="submit">Book now</button>' +
+      '<p class="small" style="margin-top:10px">Our executive will reach you soon. Your details are used only to contact you – see our <a href="policy.html">Privacy Policy</a>.</p></div>' +
+      '</form>';
+    var form = host.querySelector("form"), btn = form.querySelector("button"), box = form.querySelector(".msg");
+    var say = function (cls, html) { box.className = "full msg " + cls; box.innerHTML = html; };
+    form.addEventListener("focusin", function () { db().catch(function () {}); }, { once: true });
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var f = new FormData(form), g = function (k) { return (f.get(k) || "").toString().trim(); };
+      if (g("company")) return;
+      if (!g("name") || !/^\S+@\S+\.\S+$/.test(g("email"))) return say("err", "Please enter your name and a valid email address.");
+      if (g("phone").replace(/\D/g, "").length < 10) return say("err", "Please enter a phone number with at least 10 digits.");
+      btn.disabled = true; btn.textContent = "Sending…"; say("", "");
+      Promise.race([db().then(function (x) {
+        return x.collection("leads").add({
+          name: g("name"), phone: g("phone"), email: g("email"), service: g("service"),
+          message: g("message").slice(0, 2000), page: location.pathname, status: "new",
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      }), new Promise(function (_, no) { setTimeout(function () { no(new Error("timeout")); }, 15000); })]).then(function () {
+        try { firebase.analytics().logEvent("generate_lead"); } catch (e) {}
+        form.reset();
+        say("ok", "Thank you! Our executive will reach you soon.");
+      }).catch(function () {
+        say("err", "We could not send your message right now. Please check your connection and try again, or email <a href=\"mailto:appseeapps@gmail.com\">appseeapps@gmail.com</a>.");
+      }).then(function () { btn.disabled = false; btn.textContent = "Book now"; });
+    });
+  }
+})();
+</script>
+<script>
+/*as-loc*/
+(function(){
+var d=document,N={en:"English",ta:"தமிழ்",hi:"हिन्दी",ar:"العربية",es:"Español",fr:"Français",de:"Deutsch"},LG=["ta","hi","ar","es","fr","de"],P={},Z={},M={},EN={US:"USA",GB:"the UK",AE:"the UAE"};
+/* PRICES per month: edit here. Format: COUNTRY CURRENCY AMOUNT */
+"IN INR 2000;US USD 25;AE AED 200;GB GBP 20;CA CAD 35;AU AUD 38;NZ NZD 40;SG SGD 33;MY MYR 110;SA SAR 200;QA QAR 200;KW KWD 17;OM OMR 20;BH BHD 20;LK LKR 7500;BD BDT 3000;NP NPR 3300;PK PKR 7000;DE EUR 25;FR EUR 25;ES EUR 25;IT EUR 25;NL EUR 25;PT EUR 25;IE EUR 25;BR BRL 125;MX MXN 430;ZA ZAR 450;JP JPY 3500;ID IDR 400000".split(";").forEach(function(s){s=s.split(" ");P[s[0]]=[s[1],+s[2]]});
+"IN:Asia/Kolkata,Asia/Calcutta;US:America/New_York,America/Chicago,America/Denver,America/Los_Angeles,America/Phoenix,America/Anchorage,Pacific/Honolulu,America/Detroit;AE:Asia/Dubai;GB:Europe/London;CA:America/Toronto,America/Vancouver,America/Edmonton,America/Winnipeg,America/Halifax;AU:Australia/Sydney,Australia/Melbourne,Australia/Perth,Australia/Brisbane,Australia/Adelaide;NZ:Pacific/Auckland;SG:Asia/Singapore;MY:Asia/Kuala_Lumpur;SA:Asia/Riyadh;QA:Asia/Qatar;KW:Asia/Kuwait;OM:Asia/Muscat;BH:Asia/Bahrain;LK:Asia/Colombo;BD:Asia/Dhaka;NP:Asia/Kathmandu,Asia/Katmandu;PK:Asia/Karachi;DE:Europe/Berlin;FR:Europe/Paris;ES:Europe/Madrid;IT:Europe/Rome;NL:Europe/Amsterdam;PT:Europe/Lisbon;IE:Europe/Dublin;BR:America/Sao_Paulo;MX:America/Mexico_City;ZA:Africa/Johannesburg;JP:Asia/Tokyo;ID:Asia/Jakarta".split(";").forEach(function(s){s=s.split(":");s[1].split(",").forEach(function(t){Z[t]=s[0]})});
+var H="App development for businesses across India and worldwide.",BT="Plans start from {P} per month";
+/* TRANSLATIONS: [English text, ta, hi, ar, es, fr, de] */
+[[H,"{C} மற்றும் உலகம் முழுவதும் உள்ள வணிகங்களுக்கான செயலி மேம்பாடு.","{C} और दुनिया भर के व्यवसायों के लिए ऐप डेवलपमेंट।","تطوير التطبيقات للشركات في {C} وحول العالم.","Desarrollo de apps para empresas: {C} y todo el mundo.","Développement d’applications pour les entreprises : {C} et le monde entier.","App-Entwicklung für Unternehmen: {C} und weltweit."],
+[BT,"திட்டங்கள் மாதத்திற்கு {P} முதல் தொடங்கும்","प्लान {P} प्रति माह से शुरू","تبدأ الباقات من {P} شهريًا","Planes desde {P} al mes","Forfaits à partir de {P} par mois","Tarife ab {P} pro Monat"],
+["Home","முகப்பு","होम","الرئيسية","Inicio","Accueil","Startseite"],
+["Services","சேவைகள்","सेवाएँ","الخدمات","Servicios","Services","Leistungen"],
+["Marketing","மார்க்கெட்டிங்","मार्केटिंग","التسويق","Marketing","Marketing","Marketing"],
+["Our Apps","எங்கள் செயலிகள்","हमारे ऐप्स","تطبيقاتنا","Nuestras apps","Nos applications","Unsere Apps"],
+["Contact","தொடர்புக்கு","संपर्क","اتصل بنا","Contacto","Contact","Kontakt"],
+["Policy","கொள்கை","नीति","السياسة","Política","Politique","Richtlinie"],
+["Book now","இப்போதே பதிவு செய்யுங்கள்","अभी बुक करें","احجز الآن","Reservar ahora","Réserver","Jetzt buchen"],
+["See our apps","எங்கள் செயலிகளைப் பாருங்கள்","हमारे ऐप्स देखें","شاهد تطبيقاتنا","Ver nuestras apps","Voir nos applications","Unsere Apps ansehen"],
+["Fill in the form. Our executive will reach you soon.","படிவத்தை நிரப்புங்கள். எங்கள் நிர்வாகி விரைவில் உங்களைத் தொடர்புகொள்வார்.","फ़ॉर्म भरें। हमारे एक्ज़ीक्यूटिव जल्द ही आपसे संपर्क करेंगे।","املأ النموذج وسيتواصل معك مسؤولنا قريبًا.","Rellena el formulario. Nuestro ejecutivo se pondrá en contacto contigo pronto.","Remplissez le formulaire. Notre conseiller vous contactera très bientôt.","Füllen Sie das Formular aus. Unser Mitarbeiter meldet sich bald bei Ihnen."],
+["Your name *","உங்கள் பெயர் *","आपका नाम *","الاسم *","Tu nombre *","Votre nom *","Ihr Name *"],
+["Phone *","தொலைபேசி *","फ़ोन *","الهاتف *","Teléfono *","Téléphone *","Telefon *"],
+["Email *","மின்னஞ்சல் *","ईमेल *","البريد الإلكتروني *","Correo electrónico *","E-mail *","E-Mail *"],
+["What do you need?","உங்களுக்கு என்ன தேவை?","आपको क्या चाहिए?","ماذا تحتاج؟","¿Qué necesitas?","De quoi avez-vous besoin ?","Was benötigen Sie?"],
+["Tell us about your project","உங்கள் திட்டம் பற்றி சொல்லுங்கள்","अपने प्रोजेक्ट के बारे में बताएं","أخبرنا عن مشروعك","Cuéntanos sobre tu proyecto","Parlez-nous de votre projet","Erzählen Sie uns von Ihrem Projekt"],
+["Get in touch","தொடர்பு கொள்ளுங்கள்","संपर्क करें","تواصل معنا","Ponte en contacto","Contactez-nous","Kontakt aufnehmen"],
+["Have an idea? Let's talk.","ஒரு யோசனை உள்ளதா? பேசலாம்.","कोई आइडिया है? बात करते हैं।","لديك فكرة؟ لنتحدث.","¿Tienes una idea? Hablemos.","Une idée ? Parlons-en.","Sie haben eine Idee? Sprechen wir darüber."],
+["Book now and our executive will reach you soon.","இப்போதே பதிவு செய்யுங்கள், எங்கள் நிர்வாகி விரைவில் தொடர்புகொள்வார்.","अभी बुक करें, हमारे एक्ज़ीक्यूटिव जल्द संपर्क करेंगे।","احجز الآن وسيتواصل معك مسؤولنا قريبًا.","Reserva ahora y nuestro ejecutivo te contactará pronto.","Réservez et notre conseiller vous contactera très bientôt.","Jetzt buchen – unser Mitarbeiter meldet sich bald."],
+["App and web development services","செயலி மற்றும் இணையதள மேம்பாட்டு சேவைகள்","ऐप और वेब डेवलपमेंट सेवाएँ","خدمات تطوير التطبيقات والمواقع","Servicios de desarrollo de apps y web","Services de développement d’applications et de sites web","App- und Webentwicklung"],
+["App marketing and ASO that brings real users","உண்மையான பயனர்களை கொண்டுவரும் செயலி மார்க்கெட்டிங் மற்றும் ASO","ऐप मार्केटिंग और ASO जो असली यूज़र लाए","تسويق التطبيقات وASO الذي يجلب مستخدمين حقيقيين","Marketing de apps y ASO que atrae usuarios reales","Marketing d’apps et ASO qui attirent de vrais utilisateurs","App-Marketing und ASO, die echte Nutzer bringen"],
+["Privacy Policy","தனியுரிமைக் கொள்கை","गोपनीयता नीति","سياسة الخصوصية","Política de privacidad","Politique de confidentialité","Datenschutzerklärung"]
+].forEach(function(r){var o={};LG.forEach(function(l,i){o[l]=r[i+1]});M[r[0]]=o});
+
+var q=new URLSearchParams(location.search),
+ls=function(k,v){try{if(v==null)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){}return null},
+tz="";try{tz=Intl.DateTimeFormat().resolvedOptions().timeZone||""}catch(e){}
+/* language: URL ?lang= > saved choice > browser language > English */
+var lg=(q.get("lang")||ls("as_l")||"").toLowerCase();
+if(!N[lg]){lg="en";(navigator.languages||[navigator.language||""]).some(function(x){x=(x||"").slice(0,2).toLowerCase();if(N[x]){lg=x;return true}})}
+/* country: URL ?c= > saved choice > time zone > browser region > India (default, also what crawlers see) */
+var cc=(q.get("c")||ls("as_c")||"").toUpperCase();
+if(!P[cc]){cc=Z[tz]||"";if(!cc&&tz&&!/UTC|GMT/.test(tz)){var rg=((navigator.language||"").split("-")[1]||"").toUpperCase();cc=P[rg]?rg:""}cc=cc||"IN"}
+
+var hd=d.querySelector("header"),bn=d.createElement("div");bn.className="asb";
+bn.innerHTML='<span id="ast"></span><span class="asb-s"><select id="asl" aria-label="Language"></select><select id="asc" aria-label="Country"></select></span>';
+hd?hd.after(bn):d.body.prepend(bn);
+var sl=d.getElementById("asl"),sc=d.getElementById("asc"),at=d.getElementById("ast");
+function mt(s,v){var e=d.querySelector(s);if(e)e.setAttribute(e.tagName=="LINK"?"href":"content",v)}
+var T0=d.title,D0=(d.querySelector('meta[name=description]')||{content:""}).content,cl=d.querySelector("link[rel=canonical]"),C0=cl?cl.getAttribute("href"):location.href.split("?")[0],
+ol=d.querySelector('meta[property="og:locale"]');
+if(!ol){ol=d.createElement("meta");ol.setAttribute("property","og:locale");d.head.appendChild(ol)}
+
+function apply(){
+  var dn=null,cn,mo;try{dn=new Intl.DisplayNames([lg],{type:"region"})}catch(e){}
+  cn=dn?dn.of(cc):cc;if(lg=="en"&&EN[cc])cn=EN[cc];
+  try{mo=new Intl.NumberFormat(lg+"-"+cc,{style:"currency",currency:P[cc][0],maximumFractionDigits:0}).format(P[cc][1])}catch(e){mo=P[cc][0]+" "+P[cc][1]}
+  d.documentElement.lang=lg;d.documentElement.dir=lg=="ar"?"rtl":"ltr";
+  var w=d.createTreeWalker(d.body,4),n,o,k,t;
+  while(n=w.nextNode()){
+    if(/^(SCRIPT|STYLE)$/.test(n.parentNode.nodeName))continue;
+    o=n._o||(n._o=n.nodeValue);k=o.trim();if(!M[k])continue;
+    t=lg=="en"?(k==H?k.replace("India",cn):k):(M[k][lg]||k);
+    n.nodeValue=o.replace(k,function(){return t.replace("{C}",cn)});
+  }
+  var b=(lg!="en"&&M[BT][lg])||BT;at.innerHTML=b.replace("{P}",function(){return "<b>"+mo+"</b>"});
+  sl.innerHTML=Object.keys(N).map(function(l){return '<option value="'+l+'"'+(l==lg?" selected":"")+">"+N[l]+"</option>"}).join("");
+  sc.innerHTML=Object.keys(P).map(function(c){return [dn?dn.of(c):c,c]}).sort(function(a,b){return a[0].localeCompare(b[0])}).map(function(x){return '<option value="'+x[1]+'"'+(x[1]==cc?" selected":"")+">"+x[0]+"</option>"}).join("");
+  /* SEO: title, description, social tags, canonical, locale, structured data */
+  var h=d.querySelector("h1"),h1=h?h.textContent.trim():"",ti=lg=="en"?T0:h1+" – AppSee",de=lg=="en"?D0:h1+" "+at.textContent+". AppSee.",
+  qp=new URLSearchParams(location.search),ql=(qp.get("lang")||"").toLowerCase(),qc=(qp.get("c")||"").toUpperCase(),
+  cu=C0+(N[ql]&&ql!="en"?"?lang="+ql:P[qc]?"?c="+qc:"");
+  d.title=ti;mt("meta[name=description]",de);mt('meta[property="og:title"]',ti);mt('meta[property="og:description"]',de);
+  mt("link[rel=canonical]",cu);mt('meta[property="og:url"]',cu);ol.setAttribute("content",lg+"_"+cc);
+  var j=d.querySelector('script[type="application/ld+json"]');
+  if(j)try{var jo=JSON.parse(j._o||(j._o=j.textContent));(jo["@graph"]||[]).forEach(function(x){if(x["@type"]=="ProfessionalService")x.priceRange=mo+"+"});j.textContent=JSON.stringify(jo)}catch(e){}
+}
+function go(){ls("as_l",lg);ls("as_c",cc);var u=lg!="en"?"?lang="+lg:cc!="IN"?"?c="+cc:"";try{history.replaceState(null,"",location.pathname+u+location.hash)}catch(e){}apply()}
+sl.onchange=function(){lg=sl.value;go()};sc.onchange=function(){cc=sc.value;go()};
+apply();
+})();
+</script>
 </body>
 </html>
