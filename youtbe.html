@@ -42,17 +42,13 @@ input[type=color]{width:46px;height:36px;border:0;background:none;padding:0}
 .extra{grid-area:x}#log{font-size:12.5px;color:var(--m);white-space:pre-wrap;max-height:120px;overflow:auto}
 #result a{color:var(--y)}#result video{width:100%;border-radius:10px;margin-top:8px}
 .hide{display:none!important}
-#ov{position:fixed;left:0;right:0;bottom:0;z-index:50;padding:10px;display:flex;justify-content:center;pointer-events:none}
-#ov .card{pointer-events:auto;background:var(--p);border:1px solid var(--y);border-radius:16px;padding:16px 18px;width:min(460px,100%);text-align:center;box-shadow:0 8px 40px #000a}
-#ov h3{margin:0;font-size:16px}.pb{height:14px;background:#0007;border-radius:8px;overflow:hidden;margin:10px 0 4px}.pb i{display:block;height:100%;width:0;background:var(--y);transition:width .25s}
-.pct{font:700 38px/1.1 "Noto Sans",sans-serif;color:var(--y)}
 </style></head><body>
 <div class="app">
 <div class="stagecol"><div class="stage" id="stage"><canvas id="cv" width="1920" height="1080"></canvas></div>
 <div class="bar"><button id="btnFs">⛶ Full screen play</button><span id="vinfo"></span></div></div>
 
 <div class="panel">
-<div class="tabs"><button class="on" data-t="q">Questions</button><button data-t="v">Voice</button><button data-t="d">Design</button><button data-t="r">Export</button></div>
+<div class="tabs"><button class="on" data-t="q">Questions</button><button data-t="v">Voice</button><button data-t="d">Design</button><button data-t="r">Record</button></div>
 
 <div class="pane on" id="p-q">
 <label for="src">One line = one question (10, 20, any number)</label>
@@ -89,23 +85,20 @@ input[type=color]{width:46px;height:36px;border:0;background:none;padding:0}
 
 <div class="pane" id="p-r">
 <label for="res">Video size (always 16:9)</label><select id="res" class="sv"><option value="1920x1080">1920 × 1080 Full HD</option><option value="1280x720">1280 × 720 HD</option></select>
-<label for="gkey">Google Cloud TTS API key (optional – reliable Tamil female voice)</label><input type="password" id="gkey" class="sv" autocomplete="off" placeholder="AIza…">
-<label for="gvoice">Voice name (optional)</label><input type="text" id="gvoice" class="sv" placeholder="ta-IN-Wavenet-A">
-<div class="hint"><b>Create MP4</b> press panna live record illa – browser-ae frame-by-frame render panni MP4 (H.264 + AAC) seiyum, <b>percentage</b> kaattum. Screen share / screen record venaam. Phone-layum work aagum.<br><br><b>Voice:</b> API key irundha Google Cloud female voice use aagum (reliable). Key illana free Google voice public proxy vazhiyaa varum – adhu fail aagalaam.<br><br>100% varra varaikkum screen on-la vechchu, indha tab-a vittu pogaadheenga. 10 question ≈ 1–5 min (phone konjam slow). API key indha browser-la mattum save aagum.</div>
+<div class="hint"><b>Desktop Chrome / Edge:</b> Record MP4 press → popup-la <b>This Tab</b> select + <b>Also share tab audio</b> tick. Record mudiyum varaikkum tab-a vittu pogaadheenga.<br><br><b>Mobile:</b> browser recording support illa. “Full screen play” press panni phone-oda screen recorder (internal audio on) use pannunga. Preview &amp; design full-aa work aagum.</div>
 </div>
 
-<div class="actions"><button class="go" id="bP">▶ Preview</button><button class="rec" id="bR">⬇ Create MP4</button><button id="bS" disabled>■</button></div>
+<div class="actions"><button class="go" id="bP">▶ Preview</button><button class="rec" id="bR">● Record MP4</button><button id="bS" disabled>■</button></div>
 </div>
 
 <div class="extra"><div id="result"></div><details><summary class="hint">Activity log</summary><div id="log">Ready.</div></details></div>
 </div>
 
-<div id="ov" class="hide"><div class="card"><h3 id="ovT">Creating video…</h3><div class="pct" id="pct">0%</div><div class="pb"><i id="pbar"></i></div><div class="hint" id="ovM"></div><button id="ovC" style="margin-top:8px">Cancel</button></div></div>
 <script>
 (()=>{
 const $=id=>document.getElementById(id),cv=$('cv'),ctx=cv.getContext('2d'),DW=1366,DH=768;
 const FONT='"Noto Sans Tamil","Noto Sans Devanagari","Noto Sans Telugu","Noto Sans Kannada","Noto Sans Malayalam","Noto Sans Bengali","Noto Sans","Nirmala UI",sans-serif';
-let st={phase:'idle'},pv=null,pvRev=false,runId=0,rec=null,chunks=[],disp=null,mime='',ac=null,curAudio=null,curRes=null,total=0,dest=null,inApp=false,curSrc=null,wl=null;const bufs=new Map();const now=()=>vt!=null?vt:performance.now();let vt=null,rendering=false,cancelExp=false,exporting=false;
+let st={phase:'idle'},pv=null,pvRev=false,runId=0,rec=null,chunks=[],disp=null,mime='',ac=null,curAudio=null,curRes=null,total=0;
 const imgs=new Map(),sleep=ms=>new Promise(r=>setTimeout(r,ms)),log=m=>{$('log').textContent+='\n'+m};
 
 /* ---- settings ---- */
@@ -166,25 +159,18 @@ const SPK={ta:'ஏ,பி,சி,டி,இ,எஃப்',hi:'ए,बी,सी,
 const ANS={ta:'பதில்',hi:'सही उत्तर',te:'సమాధానం',kn:'ಉತ್ತರ',ml:'ഉത്തരം',bn:'উত্তর',en:'Answer'};
 const lab=(l,lang)=>{const p=pre(lang);return SPK[p]?SPK[p].split(',')[l.charCodeAt(0)-65]:l};
 const LANG=()=>V('lang');
-function rateFor(lang){if(!C('auto'))return+V('rate');const b=inApp?1:({ta:.9,hi:.93,te:.9,kn:.9,ml:.88,bn:.93,en:1}[pre(lang)]||.95);return Math.min(1.8,b*V('pace'))}
-function cancelSpeech(){speechSynthesis.cancel();if(curSrc){try{curSrc.stop()}catch(e){}curSrc=null}if(curAudio){curAudio.pause();curAudio=null}if(curRes){curRes();curRes=null}}
+function rateFor(lang){if(!C('auto'))return+V('rate');const b={ta:.9,hi:.93,te:.9,kn:.9,ml:.88,bn:.93,en:1}[pre(lang)]||.95;return Math.min(1.8,b*V('pace'))}
+function cancelSpeech(){speechSynthesis.cancel();if(curAudio){curAudio.pause();curAudio=null}if(curRes){curRes();curRes=null}}
 function chunk(t,max=170){const out=[];let cur='';for(const w of t.split(/\s+/)){if((cur+' '+w).trim().length>max&&cur){out.push(cur);cur=w}else cur=(cur+' '+w).trim()}if(cur)out.push(cur);return out}
 async function playOnline(t,lang,rate){for(const c of chunk(t)){await new Promise((res,rej)=>{const a=new Audio('https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl='+pre(lang)+'&q='+encodeURIComponent(c));a.playbackRate=Math.max(.5,Math.min(2,rate));curAudio=a;curRes=res;const to=setTimeout(()=>rej(),20000);a.onended=()=>{clearTimeout(to);res()};a.onerror=()=>{clearTimeout(to);rej()};a.play().catch(()=>{clearTimeout(to);rej()})})}}
 function playDevice(t,lang,d,rate){return new Promise(res=>{const u=new SpeechSynthesisUtterance(t);u.lang=lang;if(d)u.voice=d;u.rate=rate;let f=0;const fin=()=>{if(!f){f=1;clearTimeout(tm);curRes=null;res()}};curRes=fin;u.onend=fin;u.onerror=fin;const tm=setTimeout(fin,Math.max(4000,t.length*450/rate+3000));speechSynthesis.speak(u)})}
 async function speak(t,fl){if(!t)return;const lang=fl&&fl!='auto'?fl:detect(t),r=rateFor(lang),p=plan(lang);
  if(p.online){try{await playOnline(t,lang,r);return}catch(e){log('⚠ Online voice fail aachu (internet check) – device voice use pannren')}}
  await playDevice(t,lang,p.d,r)}
-const optT=(o,lang)=>lab(o.label,lang=='auto'?detect(o.text):lang)+'. '+o.text,ansT=(a,lang)=>{const l=lang=='auto'?detect(a.text):lang;return(ANS[pre(l)]||ANS.en)+'. '+lab(a.label,l)+'. '+a.text};
-const KEY=()=>V('gkey').trim(),exRate=l=>C('auto')?Math.min(1.8,(KEY()?({ta:.92,hi:.95}[pre(l)]||1):1)*V('pace')):+V('rate');
-const GV={'ta-IN':'ta-IN-Wavenet-A','hi-IN':'hi-IN-Wavenet-A','te-IN':'te-IN-Standard-A','kn-IN':'kn-IN-Wavenet-A','ml-IN':'ml-IN-Wavenet-A','bn-IN':'bn-IN-Wavenet-A','en-IN':'en-IN-Wavenet-A','en-US':'en-US-Wavenet-F'};
-const PROX=[x=>x,x=>'https://api.allorigins.win/raw?url='+encodeURIComponent(x),x=>'https://api.codetabs.com/v1/proxy/?quest='+encodeURIComponent(x),x=>'https://corsproxy.io/?url='+encodeURIComponent(x)];let pk=0;
-async function fetchAudio(u){for(let k=0;k<PROX.length;k++){const i=(pk+k)%PROX.length;try{const r=await fetch(PROX[i](u));if(!r.ok)continue;const ab=await r.arrayBuffer();if(ab.byteLength<500)continue;const b=await ac.decodeAudioData(ab);pk=i;return b}catch(e){}}throw new Error('free voice proxy fail (API key use pannunga)')}
-async function apiAudio(t,l,rate){const nm=V('gvoice').trim(),r=await fetch('https://texttospeech.googleapis.com/v1/text:synthesize?key='+encodeURIComponent(KEY()),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({input:{text:t},voice:{languageCode:l,name:nm&&nm.toLowerCase().startsWith(l.slice(0,2).toLowerCase())?nm:GV[l]},audioConfig:{audioEncoding:'MP3',speakingRate:rate}})}),j=await r.json();if(!j.audioContent)throw new Error('Google API: '+((j.error&&j.error.message)||'error'));const bin=atob(j.audioContent),u8=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u8[i]=bin.charCodeAt(i);return ac.decodeAudioData(u8.buffer)}
-async function getBufs(t,lang,rate){const l=lang&&lang!='auto'?lang:detect(t),api=!!KEY(),k=(api?'A'+rate.toFixed(2):'P')+l+'|'+t;if(bufs.has(k))return bufs.get(k);let out;if(api)out=[await apiAudio(t,l,rate)];else{out=[];for(const c of chunk(t))out.push(await fetchAudio('https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl='+pre(l)+'&q='+encodeURIComponent(c)))}const r={bs:out,api};bufs.set(k,r);return r}
 $('btnTest').onclick=async()=>{const l=LANG(),t={'ta-IN':'வணக்கம், இது ஒரு குரல் சோதனை','hi-IN':'नमस्ते, यह आवाज़ का परीक्षण है','te-IN':'నమస్కారం, ఇది వాయిస్ టెస్ట్','kn-IN':'ನಮಸ್ಕಾರ, ಇದು ಧ್ವನಿ ಪರೀಕ್ಷೆ','ml-IN':'നമസ്കാരം, ഇത് ശബ്ദ പരിശോധനയാണ്','bn-IN':'নমস্কার, এটি একটি ভয়েস টেস্ট'}[l]||'Hello, this is a voice test';cancelSpeech();await speak(t,l=='auto'?'ta-IN':l)};
 
 /* ---- sound ---- */
-function beep(f,d,ty='sine',v=.25,w=0){if(!ac||!C('sfx'))return;const o=ac.createOscillator(),g=ac.createGain(),t=ac.currentTime+w;o.type=ty;o.frequency.value=f;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.01);g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g);g.connect(ac.destination);if(dest)g.connect(dest);o.start(t);o.stop(t+d+.05)}
+function beep(f,d,ty='sine',v=.25,w=0){if(!ac||!C('sfx'))return;const o=ac.createOscillator(),g=ac.createGain(),t=ac.currentTime+w;o.type=ty;o.frequency.value=f;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.01);g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g).connect(ac.destination);o.start(t);o.stop(t+d+.05)}
 const tick=()=>beep(880,.12,'triangle',.22),ding=()=>{beep(784,.35,'sine',.3);beep(1047,.5,'sine',.3,.12);beep(1319,.7,'sine',.25,.26)};
 
 /* ---- images ---- */
@@ -219,7 +205,7 @@ function draw(){
  // options
  const n=it.opts.length,gap=12,top=262,H=452,bh=Math.min(112,(H-gap*(n-1))/n),y0=top+(H-(n*bh+gap*(n-1)))/2,rev=ph=='reveal';
  it.opts.forEach((o,i)=>{const y=y0+i*(bh+gap),x=40,w=650,ok=i==it.ai&&rev;ctx.save();if(rev&&!ok)ctx.globalAlpha=.4;
-  if(ok){const k=1+.015*Math.sin(now()/110);ctx.translate(x+w/2,y+bh/2);ctx.scale(k,k);ctx.translate(-x-w/2,-y-bh/2)}
+  if(ok){const k=1+.015*Math.sin(performance.now()/110);ctx.translate(x+w/2,y+bh/2);ctx.scale(k,k);ctx.translate(-x-w/2,-y-bh/2)}
   rr(x,y,w,bh,22);ctx.fillStyle=ok?V('ca'):V('co');shadow(1);ctx.fill();shadow(0);ctx.lineWidth=ok?7:4;ctx.strokeStyle=ok?'#FFFFFF':acc;ctx.stroke();
   const r=Math.min(34,bh/2-9);ctx.beginPath();ctx.arc(x+16+r+4,y+bh/2,r,0,7);ctx.fillStyle=ok?'#FFFFFF':PAL[i%6];ctx.fill();
   ctx.fillStyle=ok?V('ca'):'#FFFFFF';ctx.font='700 '+Math.round(r*1.1)+'px "Noto Sans",sans-serif';ctx.textAlign='center';ctx.fillText(o.label,x+20+r,y+bh/2+1);
@@ -232,7 +218,7 @@ function draw(){
  if(im){ctx.save();rr(bx+10,by+10,bw-20,H-20,18);ctx.clip();const s=Math.min((bw-28)/im.width,(H-28)/im.height);ctx.drawImage(im,bx+(bw-im.width*s)/2,by+(H-im.height*s)/2,im.width*s,im.height*s);ctx.restore()}
  else{ctx.textAlign='center';if(rev){ctx.fillStyle=V('ca');const a=fit(it.opts[it.ai].text,bw-70,H-60,80,26);ctx.font='700 '+a.s+'px '+FONT;lines(a,bx+bw/2,by,H,'center')}else{ctx.fillStyle=rgba(acc,.25);ctx.font='700 300px "Noto Sans",sans-serif';ctx.fillText('?',bx+bw/2,by+H/2+10)}}
  // timer
- if(ph=='countdown'&&st.cd){const left=Math.max(0,st.cd.d-(now()-st.cd.t)),cx=1282,cy=by+H-8,r=50;
+ if(ph=='countdown'&&st.cd){const left=Math.max(0,st.cd.d-(performance.now()-st.cd.t)),cx=1282,cy=by+H-8,r=50;
   ctx.beginPath();ctx.arc(cx,cy,r,0,7);ctx.fillStyle='#FFFFFF';shadow(1);ctx.fill();shadow(0);
   ctx.lineWidth=9;ctx.strokeStyle=rgba(acc,.18);ctx.beginPath();ctx.arc(cx,cy,r-4,0,7);ctx.stroke();
   ctx.strokeStyle=V('ca');ctx.lineCap='round';ctx.beginPath();ctx.arc(cx,cy,r-4,-Math.PI/2,-Math.PI/2+Math.PI*2*left/st.cd.d);ctx.stroke();
@@ -240,73 +226,23 @@ function draw(){
  // progress + footer
  const pr=live?(st.i+(rev?1:.5))/st.n:0;rr(40,732,DW-80,9,4.5);ctx.fillStyle='rgba(0,0,0,.18)';ctx.fill();if(pr>0){rr(40,732,(DW-80)*pr,9,4.5);ctx.fillStyle=acc;ctx.fill()}
  ctx.fillStyle=acc;ctx.font='700 17px '+FONT;ctx.textAlign='center';ctx.fillText(V('foot'),DW/2,754)}
-(function L(){if(!rendering)draw();requestAnimationFrame(L)})();
+(function L(){draw();requestAnimationFrame(L)})();
 cv.onclick=()=>{if(!st.item){pvRev=!pvRev}};
 
-/* ---- export: offline render -> MP4 (WebCodecs), with % ---- */
-const MOB=/Android|iPhone|iPad|iPod|Mobi/i.test(navigator.userAgent)||(navigator.maxTouchPoints>1&&/Mac/.test(navigator.platform));
-try{if(MOB&&!localStorage.getItem('qvm2'))$('res').value='1280x720'}catch(e){}
-const yld=()=>new Promise(r=>{const c=new MessageChannel();c.port1.onmessage=()=>r();c.port2.postMessage(0)});
-const loadJs=u=>new Promise(r=>{const e=document.createElement('script');e.src=u;e.onload=()=>r(1);e.onerror=()=>r(0);document.head.appendChild(e)});
-function P(p,m){p=Math.max(0,Math.min(100,p));$('pbar').style.width=p+'%';$('pct').textContent=Math.floor(p)+'%';if(m)$('ovM').textContent=m}
-function bp(oc,t,f,d,ty,v){const o=oc.createOscillator(),g=oc.createGain();o.type=ty;o.frequency.value=f;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.01);g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g);g.connect(oc.destination);o.start(t);o.stop(t+d+.05)}
-async function buildTL(items,lang){
- const need=[];items.forEach(it=>{need.push(it.q);if(C('rOpt'))it.opts.forEach(o=>need.push(optT(o,lang)));if(C('rAns'))need.push(ansT(it.opts[it.ai],lang))});
- const uniq=[...new Set(need)],res=new Map(),q=[...uniq],LG=t=>lang!='auto'?lang:detect(t);let done=0,fail=0,err='';
- const w=async()=>{while(q.length&&!cancelExp){const t=q.shift();try{res.set(t,await getBufs(t,lang,exRate(LG(t))))}catch(e){fail++;err=e.message||String(e)}done++;P(30*done/uniq.length,'Voice download '+done+' / '+uniq.length+(fail?' ('+fail+' fail)':''))}};
- await Promise.all([w(),w(),w()]);if(cancelExp)throw new Error('Cancelled');
- if(fail&&!confirm(fail+' / '+uniq.length+' voice lines download aagala ('+err+').\n\nOK = antha lines voice illama continue.\nCancel = stop (Export tab-la Google API key kudutha reliable).'))throw new Error('Voice download fail: '+err);
- const au=[],sfx=[],scenes=[],auto=C('auto'),pace=+V('pace');let t=0;
- items.forEach((it,i)=>{const a=it.opts[it.ai],wait=auto?Math.max(2,Math.round(3/pace)):Math.max(1,+V('wait')||3),hold=auto?Math.min(5,Math.max(2,(2+a.text.length/25)/pace)):+V('hold')||3,base={item:it,i,n:items.length},t0=t;let c=t+.5;
-  const add=x=>{const L=LG(x),r=res.get(x);if(!r){c+=Math.max(1,x.length*.08);return}const pr=r.api?1:exRate(L);au.push({r,t:c,rate:pr});c+=r.bs.reduce((s,b)=>s+b.duration,0)/pr};
-  add(it.q);if(C('rOpt'))it.opts.forEach(o=>{c+=auto?.2/pace:.15;add(optT(o,lang))});
-  const tc=c,tr=tc+wait;for(let k=0;k<wait;k++)sfx.push({t:tc+k,k:0});sfx.push({t:tr,k:1});
-  let e=tr;if(C('rAns')){c=tr+.4;add(ansT(a,lang));e=c}e+=hold;
-  scenes.push({a:t0,b:tc,s:{...base,phase:'question'}},{a:tc,b:tr,s:{...base,phase:'countdown',cd:{t:tc*1000,d:wait*1000}}},{a:tr,b:e,s:{...base,phase:'reveal'}});t=e});
- scenes.push({a:t,b:t+2,s:{phase:'end'}});return{au,sfx,scenes,dur:t+2}}
-async function mixAudio(tl){const sr=48000,oc=new OfflineAudioContext(2,Math.ceil(tl.dur*sr),sr);
- tl.au.forEach(x=>{let o=0;x.r.bs.forEach(b=>{const s=oc.createBufferSource();s.buffer=b;s.playbackRate.value=x.rate;s.connect(oc.destination);s.start(x.t+o);o+=b.duration/x.rate})});
- if(C('sfx'))tl.sfx.forEach(e=>e.k?[[784,.35,'sine',.3,0],[1047,.5,'sine',.3,.12],[1319,.7,'sine',.25,.26]].forEach(([f,d,ty,v,w])=>bp(oc,e.t+w,f,d,ty,v)):bp(oc,e.t,880,.12,'triangle',.22));
- return oc.startRendering()}
-function showDone(blob){const u=URL.createObjectURL(blob),d=new Date(),p=n=>String(n).padStart(2,'0'),nm='quiz-'+d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+'-'+p(d.getHours())+p(d.getMinutes())+'.mp4';
- $('result').innerHTML=`<b>Video ready:</b> <a download="${nm}" href="${u}">${nm} download</a> (${(blob.size/1048576).toFixed(1)} MB)<video controls playsinline src="${u}"></video>`;
- const a=document.createElement('a');a.href=u;a.download=nm;document.body.appendChild(a);a.click();a.remove();log('✔ Saved '+nm)}
-async function exportVideo(){
- const{items:all}=parseAll();if(!all.length){log('✖ Valid question illa');return}
- if(!window.VideoEncoder||!window.VideoFrame){alert('Indha browser-la video encoder (WebCodecs) illa. Latest Chrome / Edge / Safari use pannunga (https illa localhost-la open pannunga).');return}
- if(!window.Mp4Muxer)for(const u of['https://cdn.jsdelivr.net/npm/mp4-muxer@5.1.3/build/mp4-muxer.js','https://unpkg.com/mp4-muxer@5.1.3/build/mp4-muxer.js'])if(await loadJs(u)&&window.Mp4Muxer)break;
- if(!window.Mp4Muxer){alert('MP4 library load aagala. Internet check pannunga.');return}
- const items=V('count')=='all'?all:all.slice(0,+V('count')),[W,H]=V('res').split('x').map(Number),fps=MOB?24:30,lang=V('lang');
- runId++;cancelSpeech();cancelExp=false;exporting=true;setUI(true);$('result').innerHTML='';$('ov').classList.remove('hide');$('ovT').textContent='Creating video…';$('ovC').textContent='Cancel';P(0,'Starting…');
- let wl2=null,ve=null,ae=null,ee=null;try{wl2=await navigator.wakeLock.request('screen')}catch(e){}
- ac=ac||new(window.AudioContext||window.webkitAudioContext)();if(ac.state=='suspended')await ac.resume();
- try{
-  for(const it of items){await loadImg(it.img);try{await document.fonts.load('700 40px '+FONT,it.q+it.opts.map(o=>o.text).join(''))}catch(e){}}
-  const tl=await buildTL(items,lang);
-  P(30,'Audio mix aagudhu…');const ab=await mixAudio(tl);if(cancelExp)throw new Error('Cancelled');
-  let A=null;if(window.AudioEncoder)for(const[codec,m]of[['mp4a.40.2','aac'],['opus','opus']]){const c={codec,sampleRate:48000,numberOfChannels:2,bitrate:160000};try{if((await AudioEncoder.isConfigSupported(c)).supported){A={c,m};break}}catch(e){}}
-  if(!A&&!confirm('Indha browser-la audio encode support illa. Voice illama video mattum create pannalaama?'))throw new Error('Cancelled');
-  const br=W>1500?8e6:4.5e6;let VC=null;for(const[codec,m]of[['avc1.640028','avc'],['avc1.4d0028','avc'],['avc1.42E028','avc'],['vp09.00.40.08','vp9']]){const c={codec,width:W,height:H,bitrate:br,framerate:fps};try{if((await VideoEncoder.isConfigSupported(c)).supported){VC={c,m};break}}catch(e){}}
-  if(!VC)throw new Error('Indha device-la video encoder config support illa');
-  const mux=new Mp4Muxer.Muxer({target:new Mp4Muxer.ArrayBufferTarget(),video:{codec:VC.m,width:W,height:H},...(A?{audio:{codec:A.m,numberOfChannels:2,sampleRate:48000}}:{}),fastStart:'in-memory',firstTimestampBehavior:'offset'});
-  ve=new VideoEncoder({output:(c,m)=>mux.addVideoChunk(c,m),error:e=>{ee=e}});ve.configure(VC.c);
-  cv.width=W;cv.height=H;rendering=true;const N=Math.ceil(tl.dur*fps);let si=0;
-  for(let i=0;i<N;i++){if(cancelExp)throw new Error('Cancelled');if(ee)throw ee;
-   const T=i/fps;while(si<tl.scenes.length-1&&T>=tl.scenes[si].b)si++;
-   st=tl.scenes[si].s;vt=T*1000;draw();
-   const f=new VideoFrame(cv,{timestamp:Math.round(i*1e6/fps),duration:Math.round(1e6/fps)});ve.encode(f,{keyFrame:i%(fps*2)==0});f.close();
-   while(ve.encodeQueueSize>6)await yld();
-   if(i%30==0){P(30+65*i/N,'Video render aagudhu… '+Math.floor(T)+' / '+Math.floor(tl.dur)+' sec');await new Promise(r=>setTimeout(r))}}
-  P(95,'Video finish aagudhu…');await ve.flush();
-  if(A){ae=new AudioEncoder({output:(c,m)=>mux.addAudioChunk(c,m),error:e=>{ee=e}});ae.configure(A.c);
-   const n=ab.length,Lc=ab.getChannelData(0),Rc=ab.getChannelData(1),CH=48000;
-   for(let o=0;o<n;o+=CH){const m=Math.min(CH,n-o),d=new Float32Array(m*2);d.set(Lc.subarray(o,o+m),0);d.set(Rc.subarray(o,o+m),m);
-    const ad=new AudioData({format:'f32-planar',sampleRate:48000,numberOfFrames:m,numberOfChannels:2,timestamp:Math.round(o/48000*1e6),data:d});ae.encode(ad);ad.close();while(ae.encodeQueueSize>10)await yld()}
-   P(98,'Audio finish aagudhu…');await ae.flush()}
-  if(ee)throw ee;mux.finalize();P(100,'');$('ovT').textContent='Video ready ✔';$('ovM').textContent='Download aagala-na keezha link irukku.';showDone(new Blob([mux.target.buffer],{type:'video/mp4'}))
- }catch(e){const m=e&&e.message||String(e);log('✖ '+m);$('ovT').textContent=m=='Cancelled'?'Cancelled':'Failed';$('ovM').textContent=m=='Cancelled'?'':m}
- finally{exporting=false;rendering=false;vt=null;st={phase:'idle'};$('ovC').textContent='Close';setUI(false);try{ve&&ve.state!='closed'&&ve.close()}catch(e){}try{ae&&ae.state!='closed'&&ae.close()}catch(e){}if(wl2)wl2.release().catch(()=>{})}}
-$('ovC').onclick=()=>{if(exporting)cancelExp=true;else $('ov').classList.add('hide')};
+/* ---- recording ---- */
+const canRec=!!(navigator.mediaDevices&&navigator.mediaDevices.getDisplayMedia&&window.MediaRecorder);
+if(!canRec){$('bR').textContent='● Record (desktop)'}
+async function startRec(){disp=await navigator.mediaDevices.getDisplayMedia({video:true,audio:true,preferCurrentTab:true,selfBrowserSurface:'include',systemAudio:'include'});
+ const at=disp.getAudioTracks();if(!at.length)log('⚠ Tab audio share aagala – voice record aagaadhu. “Also share tab audio” tick pannunga.');
+ const s=new MediaStream([...cv.captureStream(30).getVideoTracks(),...at]);
+ mime=['video/mp4;codecs=avc1.640028,mp4a.40.2','video/mp4;codecs=avc1,mp4a.40.2','video/mp4','video/webm;codecs=vp9,opus','video/webm'].find(m=>MediaRecorder.isTypeSupported(m))||'';
+ rec=new MediaRecorder(s,Object.assign({videoBitsPerSecond:10e6,audioBitsPerSecond:192e3},mime?{mimeType:mime}:{}));chunks=[];
+ rec.ondataavailable=e=>e.data&&e.data.size&&chunks.push(e.data);rec.onstop=fin;rec.start(1000);log('● Recording ('+(mime||'default')+')')}
+function fin(){const mp=mime.includes('mp4'),b=new Blob(chunks,{type:mime||'video/webm'}),u=URL.createObjectURL(b),d=new Date(),p=n=>String(n).padStart(2,'0'),nm='quiz-'+d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+'-'+p(d.getHours())+p(d.getMinutes())+(mp?'.mp4':'.webm');
+ $('result').innerHTML=`<b>Recording ready:</b> <a download="${nm}" href="${u}">${nm}</a> (${(b.size/1048576).toFixed(1)} MB)${mp?'':'<div class="hint">⚠ Indha browser MP4 support pannala, WebM aachu. YouTube accept pannum.</div>'}<video controls src="${u}"></video>`;
+ const a=document.createElement('a');a.href=u;a.download=nm;document.body.appendChild(a);a.click();a.remove();log('✔ Saved '+nm);
+ if(disp){disp.getTracks().forEach(t=>t.stop());disp=null}rec=null}
+function stopRec(){if(rec&&rec.state!='inactive')rec.stop();else if(disp){disp.getTracks().forEach(t=>t.stop());disp=null}}
 
 /* ---- run ---- */
 const setUI=on=>{$('bP').disabled=$('bR').disabled=on;$('bS').disabled=!on};
@@ -318,25 +254,25 @@ async function run(record){
  const lang=LANG(),pace=+V('pace'),auto=C('auto');
  try{st={phase:'idle'};log('Loading…');
   for(const it of items){await loadImg(it.img);try{await document.fonts.load('700 40px '+FONT,it.q+it.opts.map(o=>o.text).join(''))}catch(e){}}
-  await sleep(700);
+  if(record)await startRec();await sleep(700);
   for(let i=0;i<items.length&&my==runId;i++){
    const it=items[i],a=it.opts[it.ai],wait=auto?Math.max(2,Math.round(3/pace)):Math.max(1,+V('wait')||3),hold=auto?Math.min(5,Math.max(2,(2+a.text.length/25)/pace)):+V('hold')||3;
    st={item:it,phase:'question',i,n:items.length};log('Q'+(i+1)+': '+it.q);
    await sleep(500);await speak(it.q,lang);
-   if(C('rOpt'))for(const o of it.opts){if(my!=runId)break;await sleep(auto?200/pace:150);await speak(optT(o,lang),lang)}
+   if(C('rOpt'))for(const o of it.opts){if(my!=runId)break;await sleep(auto?200/pace:150);await speak(lab(o.label,lang=='auto'?detect(o.text):lang)+'. '+o.text,lang)}
    if(my!=runId)break;
    st.phase='countdown';st.cd={t:performance.now(),d:wait*1000};
    for(let c=0;c<wait&&my==runId;c++){tick();await sleep(1000)}
    if(my!=runId)break;
    st.phase='reveal';ding();
-   if(C('rAns')){await sleep(400);await speak(ansT(a,lang),lang)}
+   if(C('rAns')){await sleep(400);const l=lang=='auto'?detect(a.text):lang;await speak((ANS[pre(l)]||ANS.en)+'. '+lab(a.label,l)+'. '+a.text,lang)}
    await sleep(hold*1000)}
   if(my==runId){st={phase:'end'};await sleep(2000)}
  }catch(e){log('✖ '+(e&&e.name=='NotAllowedError'?'Screen/tab share permission kudukkala':e&&e.message||e))}
- finally{cancelSpeech();if(my==runId){setUI(false);st={phase:'idle'}}else setUI(false)}}
+ finally{cancelSpeech();stopRec();if(my==runId){setUI(false);st={phase:'idle'}}else setUI(false)}}
 $('bP').onclick=()=>run(false);
-$('bR').onclick=exportVideo;
-$('bS').onclick=()=>{runId++;cancelExp=true;cancelSpeech();log('■ Stopped')};
+$('bR').onclick=()=>{if(!canRec){log('✖ Recording desktop Chrome/Edge-la mattum. Mobile-la “Full screen play” + screen recorder use pannunga.');document.querySelector('[data-t=r]').click();return}run(true)};
+$('bS').onclick=()=>{runId++;cancelSpeech();log('■ Stopped')};
 $('btnFs').onclick=async()=>{try{await $('stage').requestFullscreen();screen.orientation&&screen.orientation.lock&&screen.orientation.lock('landscape').catch(()=>{})}catch(e){}await run(false);if(document.fullscreenElement)document.exitFullscreen()};
 $('res').onchange=()=>{const[W,H]=V('res').split('x').map(Number);cv.width=W;cv.height=H};
 {const[W,H]=V('res').split('x').map(Number);cv.width=W;cv.height=H}
