@@ -85,7 +85,8 @@ input[type=color]{width:46px;height:36px;border:0;background:none;padding:0}
 
 <div class="pane" id="p-r">
 <label for="res">Video size (always 16:9)</label><select id="res" class="sv"><option value="1920x1080">1920 × 1080 Full HD</option><option value="1280x720">1280 × 720 HD</option></select>
-<div class="hint"><b>Desktop Chrome / Edge:</b> Record MP4 press → popup-la <b>This Tab</b> select + <b>Also share tab audio</b> tick. Record mudiyum varaikkum tab-a vittu pogaadheenga.<br><br><b>Mobile:</b> browser recording support illa. “Full screen play” press panni phone-oda screen recorder (internal audio on) use pannunga. Preview &amp; design full-aa work aagum.</div>
+<label for="rmode">Record mode</label><select id="rmode" class="sv"><option value="auto">Auto (mobile → In-app, desktop → Tab)</option><option value="inapp">In-app (mobile friendly, no screen share)</option><option value="tab">Tab capture (desktop Chrome / Edge)</option></select>
+<div class="hint"><b>In-app record:</b> Record press panna voice lines mudhalla download aagum (progress log-la theriyum), appuram video + voice nerave record aagi MP4 save aagum. Screen share popup varaadhu. Mobile-um work aagum.<br>• Record mudiyum varaikkum screen on-la vechchu, indha tab/app-a vittu pogaadheenga.<br>• Mobile-la 1280×720 recommend.<br>• In-app mode-ku internet venum (online female voice).<br><b>Tab capture:</b> desktop Chrome/Edge – popup-la <b>This Tab</b> + <b>Also share tab audio</b> tick pannunga.</div>
 </div>
 
 <div class="actions"><button class="go" id="bP">▶ Preview</button><button class="rec" id="bR">● Record MP4</button><button id="bS" disabled>■</button></div>
@@ -98,7 +99,7 @@ input[type=color]{width:46px;height:36px;border:0;background:none;padding:0}
 (()=>{
 const $=id=>document.getElementById(id),cv=$('cv'),ctx=cv.getContext('2d'),DW=1366,DH=768;
 const FONT='"Noto Sans Tamil","Noto Sans Devanagari","Noto Sans Telugu","Noto Sans Kannada","Noto Sans Malayalam","Noto Sans Bengali","Noto Sans","Nirmala UI",sans-serif';
-let st={phase:'idle'},pv=null,pvRev=false,runId=0,rec=null,chunks=[],disp=null,mime='',ac=null,curAudio=null,curRes=null,total=0;
+let st={phase:'idle'},pv=null,pvRev=false,runId=0,rec=null,chunks=[],disp=null,mime='',ac=null,curAudio=null,curRes=null,total=0,dest=null,inApp=false,curSrc=null,wl=null;const bufs=new Map();
 const imgs=new Map(),sleep=ms=>new Promise(r=>setTimeout(r,ms)),log=m=>{$('log').textContent+='\n'+m};
 
 /* ---- settings ---- */
@@ -159,18 +160,24 @@ const SPK={ta:'ஏ,பி,சி,டி,இ,எஃப்',hi:'ए,बी,सी,
 const ANS={ta:'பதில்',hi:'सही उत्तर',te:'సమాధానం',kn:'ಉತ್ತರ',ml:'ഉത്തരം',bn:'উত্তর',en:'Answer'};
 const lab=(l,lang)=>{const p=pre(lang);return SPK[p]?SPK[p].split(',')[l.charCodeAt(0)-65]:l};
 const LANG=()=>V('lang');
-function rateFor(lang){if(!C('auto'))return+V('rate');const b={ta:.9,hi:.93,te:.9,kn:.9,ml:.88,bn:.93,en:1}[pre(lang)]||.95;return Math.min(1.8,b*V('pace'))}
-function cancelSpeech(){speechSynthesis.cancel();if(curAudio){curAudio.pause();curAudio=null}if(curRes){curRes();curRes=null}}
+function rateFor(lang){if(!C('auto'))return+V('rate');const b=inApp?1:({ta:.9,hi:.93,te:.9,kn:.9,ml:.88,bn:.93,en:1}[pre(lang)]||.95);return Math.min(1.8,b*V('pace'))}
+function cancelSpeech(){speechSynthesis.cancel();if(curSrc){try{curSrc.stop()}catch(e){}curSrc=null}if(curAudio){curAudio.pause();curAudio=null}if(curRes){curRes();curRes=null}}
 function chunk(t,max=170){const out=[];let cur='';for(const w of t.split(/\s+/)){if((cur+' '+w).trim().length>max&&cur){out.push(cur);cur=w}else cur=(cur+' '+w).trim()}if(cur)out.push(cur);return out}
 async function playOnline(t,lang,rate){for(const c of chunk(t)){await new Promise((res,rej)=>{const a=new Audio('https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl='+pre(lang)+'&q='+encodeURIComponent(c));a.playbackRate=Math.max(.5,Math.min(2,rate));curAudio=a;curRes=res;const to=setTimeout(()=>rej(),20000);a.onended=()=>{clearTimeout(to);res()};a.onerror=()=>{clearTimeout(to);rej()};a.play().catch(()=>{clearTimeout(to);rej()})})}}
 function playDevice(t,lang,d,rate){return new Promise(res=>{const u=new SpeechSynthesisUtterance(t);u.lang=lang;if(d)u.voice=d;u.rate=rate;let f=0;const fin=()=>{if(!f){f=1;clearTimeout(tm);curRes=null;res()}};curRes=fin;u.onend=fin;u.onerror=fin;const tm=setTimeout(fin,Math.max(4000,t.length*450/rate+3000));speechSynthesis.speak(u)})}
-async function speak(t,fl){if(!t)return;const lang=fl&&fl!='auto'?fl:detect(t),r=rateFor(lang),p=plan(lang);
+async function speak(t,fl){if(!t)return;const lang=fl&&fl!='auto'?fl:detect(t),r=rateFor(lang),p=plan(lang);if(inApp){try{await playBufs(await getBufs(t,lang),r);return}catch(e){log('⚠ Voice capture aagala – device voice (record-la varaadhu)')}}
  if(p.online){try{await playOnline(t,lang,r);return}catch(e){log('⚠ Online voice fail aachu (internet check) – device voice use pannren')}}
  await playDevice(t,lang,p.d,r)}
+const optT=(o,lang)=>lab(o.label,lang=='auto'?detect(o.text):lang)+'. '+o.text,ansT=(a,lang)=>{const l=lang=='auto'?detect(a.text):lang;return(ANS[pre(l)]||ANS.en)+'. '+lab(a.label,l)+'. '+a.text};
+async function fetchAudio(u){for(const f of[x=>x,x=>'https://corsproxy.io/?url='+encodeURIComponent(x),x=>'https://api.allorigins.win/raw?url='+encodeURIComponent(x)]){try{const r=await fetch(f(u));if(!r.ok)continue;const ab=await r.arrayBuffer();if(ab.byteLength<500)continue;return await ac.decodeAudioData(ab)}catch(e){}}throw new Error('fetch')}
+async function getBufs(t,lang){const l=lang&&lang!='auto'?lang:detect(t),k=l+'|'+t;if(bufs.has(k))return bufs.get(k);const out=[];for(const c of chunk(t))out.push(await fetchAudio('https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl='+pre(l)+'&q='+encodeURIComponent(c)));bufs.set(k,out);return out}
+async function playBufs(bs,rate){for(const b of bs)await new Promise(res=>{const s=ac.createBufferSource();s.buffer=b;s.playbackRate.value=Math.max(.5,Math.min(2,rate));s.connect(ac.destination);if(dest)s.connect(dest);curSrc=s;curRes=res;s.onended=()=>{curRes=null;res()};s.start()})}
+async function prefetch(items,lang){const ts=[...new Set(items.flatMap(it=>[it.q,...(C('rOpt')?it.opts.map(o=>optT(o,lang)):[]),...(C('rAns')?[ansT(it.opts[it.ai],lang)]:[])]))];let fail=0;log('Voice download: '+ts.length+' lines…');const q=[...ts],w=async()=>{while(q.length){try{await getBufs(q.shift(),lang)}catch(e){fail++}}};await Promise.all([w(),w(),w(),w()]);
+ if(fail){log('⚠ '+fail+' voice line fetch aagala');if(fail==ts.length&&!confirm('Indha network/browser-la voice capture work aagala. Voice illama (video + sound effects mattum) record pannalaama?\n\nIllana Cancel → desktop-la Tab capture use pannunga.'))return false}else log('✔ Voice ready');return true}
 $('btnTest').onclick=async()=>{const l=LANG(),t={'ta-IN':'வணக்கம், இது ஒரு குரல் சோதனை','hi-IN':'नमस्ते, यह आवाज़ का परीक्षण है','te-IN':'నమస్కారం, ఇది వాయిస్ టెస్ట్','kn-IN':'ನಮಸ್ಕಾರ, ಇದು ಧ್ವನಿ ಪರೀಕ್ಷೆ','ml-IN':'നമസ്കാരം, ഇത് ശബ്ദ പരിശോധനയാണ്','bn-IN':'নমস্কার, এটি একটি ভয়েস টেস্ট'}[l]||'Hello, this is a voice test';cancelSpeech();await speak(t,l=='auto'?'ta-IN':l)};
 
 /* ---- sound ---- */
-function beep(f,d,ty='sine',v=.25,w=0){if(!ac||!C('sfx'))return;const o=ac.createOscillator(),g=ac.createGain(),t=ac.currentTime+w;o.type=ty;o.frequency.value=f;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.01);g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g).connect(ac.destination);o.start(t);o.stop(t+d+.05)}
+function beep(f,d,ty='sine',v=.25,w=0){if(!ac||!C('sfx'))return;const o=ac.createOscillator(),g=ac.createGain(),t=ac.currentTime+w;o.type=ty;o.frequency.value=f;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.01);g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g);g.connect(ac.destination);if(dest)g.connect(dest);o.start(t);o.stop(t+d+.05)}
 const tick=()=>beep(880,.12,'triangle',.22),ding=()=>{beep(784,.35,'sine',.3);beep(1047,.5,'sine',.3,.12);beep(1319,.7,'sine',.25,.26)};
 
 /* ---- images ---- */
@@ -230,14 +237,17 @@ function draw(){
 cv.onclick=()=>{if(!st.item){pvRev=!pvRev}};
 
 /* ---- recording ---- */
-const canRec=!!(navigator.mediaDevices&&navigator.mediaDevices.getDisplayMedia&&window.MediaRecorder);
-if(!canRec){$('bR').textContent='● Record (desktop)'}
+const hasMR=!!window.MediaRecorder,canRec=hasMR&&!!(navigator.mediaDevices&&navigator.mediaDevices.getDisplayMedia),MOB=/Android|iPhone|iPad|iPod|Mobi/i.test(navigator.userAgent)||(navigator.maxTouchPoints>1&&/Mac/.test(navigator.platform));
+try{if(MOB&&!localStorage.getItem('qvm2'))$('res').value='1280x720'}catch(e){}
 async function startRec(){disp=await navigator.mediaDevices.getDisplayMedia({video:true,audio:true,preferCurrentTab:true,selfBrowserSurface:'include',systemAudio:'include'});
  const at=disp.getAudioTracks();if(!at.length)log('⚠ Tab audio share aagala – voice record aagaadhu. “Also share tab audio” tick pannunga.');
  const s=new MediaStream([...cv.captureStream(30).getVideoTracks(),...at]);
  mime=['video/mp4;codecs=avc1.640028,mp4a.40.2','video/mp4;codecs=avc1,mp4a.40.2','video/mp4','video/webm;codecs=vp9,opus','video/webm'].find(m=>MediaRecorder.isTypeSupported(m))||'';
  rec=new MediaRecorder(s,Object.assign({videoBitsPerSecond:10e6,audioBitsPerSecond:192e3},mime?{mimeType:mime}:{}));chunks=[];
  rec.ondataavailable=e=>e.data&&e.data.size&&chunks.push(e.data);rec.onstop=fin;rec.start(1000);log('● Recording ('+(mime||'default')+')')}
+function mkRec(s,vb){mime=['video/mp4;codecs=avc1.640028,mp4a.40.2','video/mp4;codecs=avc1,mp4a.40.2','video/mp4','video/webm;codecs=vp9,opus','video/webm'].find(m=>MediaRecorder.isTypeSupported(m))||'';rec=new MediaRecorder(s,Object.assign({videoBitsPerSecond:vb,audioBitsPerSecond:192e3},mime?{mimeType:mime}:{}));chunks=[];rec.ondataavailable=e=>e.data&&e.data.size&&chunks.push(e.data);rec.onstop=fin;rec.start(1000);log('● Recording in-app ('+(mime||'default')+')')}
+async function startRecApp(){dest=ac.createMediaStreamDestination();try{wl=await navigator.wakeLock.request('screen')}catch(e){}mkRec(new MediaStream([...cv.captureStream(30).getVideoTracks(),...dest.stream.getAudioTracks()]),MOB?6e6:10e6)}
+const RM=()=>{const m=V('rmode');return m=='auto'?(canRec&&!MOB?'tab':'inapp'):m};
 function fin(){const mp=mime.includes('mp4'),b=new Blob(chunks,{type:mime||'video/webm'}),u=URL.createObjectURL(b),d=new Date(),p=n=>String(n).padStart(2,'0'),nm='quiz-'+d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+'-'+p(d.getHours())+p(d.getMinutes())+(mp?'.mp4':'.webm');
  $('result').innerHTML=`<b>Recording ready:</b> <a download="${nm}" href="${u}">${nm}</a> (${(b.size/1048576).toFixed(1)} MB)${mp?'':'<div class="hint">⚠ Indha browser MP4 support pannala, WebM aachu. YouTube accept pannum.</div>'}<video controls src="${u}"></video>`;
  const a=document.createElement('a');a.href=u;a.download=nm;document.body.appendChild(a);a.click();a.remove();log('✔ Saved '+nm);
@@ -254,24 +264,24 @@ async function run(record){
  const lang=LANG(),pace=+V('pace'),auto=C('auto');
  try{st={phase:'idle'};log('Loading…');
   for(const it of items){await loadImg(it.img);try{await document.fonts.load('700 40px '+FONT,it.q+it.opts.map(o=>o.text).join(''))}catch(e){}}
-  if(record)await startRec();await sleep(700);
+  if(record){if(RM()=='inapp'){inApp=true;if(await prefetch(items,lang)===false)throw new Error('Cancelled');if(my!=runId)throw new Error('Stopped');await startRecApp()}else await startRec()}await sleep(700);
   for(let i=0;i<items.length&&my==runId;i++){
    const it=items[i],a=it.opts[it.ai],wait=auto?Math.max(2,Math.round(3/pace)):Math.max(1,+V('wait')||3),hold=auto?Math.min(5,Math.max(2,(2+a.text.length/25)/pace)):+V('hold')||3;
    st={item:it,phase:'question',i,n:items.length};log('Q'+(i+1)+': '+it.q);
    await sleep(500);await speak(it.q,lang);
-   if(C('rOpt'))for(const o of it.opts){if(my!=runId)break;await sleep(auto?200/pace:150);await speak(lab(o.label,lang=='auto'?detect(o.text):lang)+'. '+o.text,lang)}
+   if(C('rOpt'))for(const o of it.opts){if(my!=runId)break;await sleep(auto?200/pace:150);await speak(optT(o,lang),lang)}
    if(my!=runId)break;
    st.phase='countdown';st.cd={t:performance.now(),d:wait*1000};
    for(let c=0;c<wait&&my==runId;c++){tick();await sleep(1000)}
    if(my!=runId)break;
    st.phase='reveal';ding();
-   if(C('rAns')){await sleep(400);const l=lang=='auto'?detect(a.text):lang;await speak((ANS[pre(l)]||ANS.en)+'. '+lab(a.label,l)+'. '+a.text,lang)}
+   if(C('rAns')){await sleep(400);await speak(ansT(a,lang),lang)}
    await sleep(hold*1000)}
   if(my==runId){st={phase:'end'};await sleep(2000)}
  }catch(e){log('✖ '+(e&&e.name=='NotAllowedError'?'Screen/tab share permission kudukkala':e&&e.message||e))}
- finally{cancelSpeech();stopRec();if(my==runId){setUI(false);st={phase:'idle'}}else setUI(false)}}
+ finally{cancelSpeech();stopRec();inApp=false;dest=null;if(wl){wl.release().catch(()=>{});wl=null}if(my==runId){setUI(false);st={phase:'idle'}}else setUI(false)}}
 $('bP').onclick=()=>run(false);
-$('bR').onclick=()=>{if(!canRec){log('✖ Recording desktop Chrome/Edge-la mattum. Mobile-la “Full screen play” + screen recorder use pannunga.');document.querySelector('[data-t=r]').click();return}run(true)};
+$('bR').onclick=()=>{if(!hasMR){log('✖ Indha browser-la recording support illa. Chrome / Safari update pannunga.');return}if(RM()=='tab'&&!canRec){log('✖ Tab capture indha device-la illa – Record mode-la In-app select pannunga.');document.querySelector('[data-t=r]').click();return}run(true)};
 $('bS').onclick=()=>{runId++;cancelSpeech();log('■ Stopped')};
 $('btnFs').onclick=async()=>{try{await $('stage').requestFullscreen();screen.orientation&&screen.orientation.lock&&screen.orientation.lock('landscape').catch(()=>{})}catch(e){}await run(false);if(document.fullscreenElement)document.exitFullscreen()};
 $('res').onchange=()=>{const[W,H]=V('res').split('x').map(Number);cv.width=W;cv.height=H};
