@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Quiz Video Maker</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@700&family=Noto+Sans+Devanagari:wght@700&family=Noto+Sans+Telugu:wght@700&family=Noto+Sans+Kannada:wght@700&family=Noto+Sans+Malayalam:wght@700&family=Noto+Sans+Bengali:wght@700&family=Noto+Sans:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#15161d;--p:#1f212c;--l:#343748;--t:#f4f4f8;--m:#a3a6b8;--y:#ffc400}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--t);font:15px/1.45 "Noto Sans","Noto Sans Tamil",system-ui,sans-serif}
+.app{display:grid;gap:14px;padding:12px;max-width:1600px;margin:0 auto;grid-template-columns:1fr;grid-template-areas:"s" "p" "x"}
+@media(min-width:1000px){.app{grid-template-columns:1fr 450px;grid-template-areas:"s p" "x p";align-items:start;padding:18px}}
+.stagecol{grid-area:s;position:sticky;top:0;z-index:5;background:var(--bg);padding:4px 0}
+.stage{background:#000;border-radius:12px;overflow:hidden;aspect-ratio:16/9;border:1px solid var(--l)}
+canvas{display:block;width:100%;height:100%}
+.stage:fullscreen{width:100vw;height:100vh;border:0;border-radius:0;display:flex;align-items:center;justify-content:center}
+.stage:fullscreen canvas{width:min(100vw,177.78vh);height:auto;aspect-ratio:16/9}
+.bar{display:flex;gap:8px;align-items:center;margin-top:6px;font-size:12.5px;color:var(--m)}
+.panel{grid-area:p;background:var(--p);border:1px solid var(--l);border-radius:14px}
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--l)}
+.tabs button{background:none;border:0;border-bottom:3px solid transparent;border-radius:0;color:var(--m);padding:13px 4px;font-weight:700}
+.tabs button.on{color:var(--y);border-color:var(--y)}
+.pane{display:none;padding:14px}.pane.on{display:block}
+label{display:block;font-size:13px;color:var(--m);margin:12px 0 4px}
+textarea,select,input[type=text],input[type=number]{width:100%;min-height:44px;background:#14151c;color:var(--t);border:1px solid var(--l);border-radius:10px;padding:9px 11px;font:inherit}
+textarea{min-height:240px;resize:vertical;line-height:1.55}
+input[type=range]{width:100%;accent-color:var(--y);height:34px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.chk{display:flex;gap:10px;align-items:center;color:var(--t);font-size:14px;margin:12px 0 0;min-height:36px}
+.chk input{width:20px;height:20px;accent-color:var(--y)}
+button{font:inherit;font-weight:700;color:var(--t);background:#2b2e3f;border:1px solid var(--l);border-radius:10px;padding:10px 14px;min-height:44px;cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--y);outline-offset:2px}
+.go{background:var(--y);color:#251b00;border-color:var(--y)}.rec{background:#e5202e;border-color:#e5202e;color:#fff}
+button:disabled{opacity:.4}
+.actions{position:sticky;bottom:0;display:grid;grid-template-columns:1fr 1fr auto;gap:8px;padding:10px 12px;background:var(--p);border-top:1px solid var(--l);border-radius:0 0 14px 14px}
+.themes{display:flex;gap:8px;flex-wrap:wrap}.themes button{display:flex;gap:4px;align-items:center;padding:8px 10px}
+.themes i{width:16px;height:16px;border-radius:50%;display:inline-block;border:1px solid #0006}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:6px 12px}
+.cols label{display:flex;justify-content:space-between;align-items:center;margin:4px 0}
+input[type=color]{width:46px;height:36px;border:0;background:none;padding:0}
+.hint{font-size:12.5px;color:var(--m);margin-top:8px}
+.ok{color:#8fe3a8}.er{color:#ff9b88}.wn{color:#f3d36a}
+.extra{grid-area:x}#log{font-size:12.5px;color:var(--m);white-space:pre-wrap;max-height:120px;overflow:auto}
+#result a{color:var(--y)}#result video{width:100%;border-radius:10px;margin-top:8px}
+.hide{display:none!important}
+</style></head><body>
+<div class="app">
+<div class="stagecol"><div class="stage" id="stage"><canvas id="cv" width="1920" height="1080"></canvas></div>
+<div class="bar"><button id="btnFs">⛶ Full screen play</button><span id="vinfo"></span></div></div>
+
+<div class="panel">
+<div class="tabs"><button class="on" data-t="q">Questions</button><button data-t="v">Voice</button><button data-t="d">Design</button><button data-t="r">Record</button></div>
+
+<div class="pane on" id="p-q">
+<label for="src">One line = one question (10, 20, any number)</label>
+<textarea id="src" class="sv" spellcheck="false">1) மூக்கால் அல்லாமல் நாக்கால் வாசனை அறியும் விலங்கு எது? ((A)பாம்பு, (B)குதிரை, (C)பூனை, (D)முயல்) "பாம்பு"
+2) மரங்கள் வளர்க என்ன தேவை? ((A)சூரியன், (B)நிழல், (C)தனி, (D)அனைத்தும்) "அனைத்தும்" |https://appsee.img/tree.jpg|
+3) भारत की राजधानी क्या है? ((A)मुंबई, (B)नई दिल्ली, (C)चेन्नई, (D)कोलकाता) "नई दिल्ली"</textarea>
+<div id="status" style="margin-top:8px"></div>
+<label for="count">How many to make</label><select id="count"></select>
+<div class="hint">Format: <code>1) Question ((A)opt, (B)opt, (C)opt, (D)opt) "Answer" |image-url|</code> — answer text illa letter ("C"). Image optional. Tap the video preview to see the answer look.</div>
+</div>
+
+<div class="pane" id="p-v">
+<div class="g2"><div><label for="lang">Language</label><select id="lang" class="sv"><option value="auto">Auto detect</option><option value="ta-IN">Tamil</option><option value="hi-IN">Hindi</option><option value="te-IN">Telugu</option><option value="kn-IN">Kannada</option><option value="ml-IN">Malayalam</option><option value="bn-IN">Bengali</option><option value="en-IN">English (India)</option><option value="en-US">English (US)</option></select></div>
+<div><label for="engine">Voice engine</label><select id="engine" class="sv"><option value="auto">Auto (best female)</option><option value="online">Online female (Google)</option><option value="device">This device only</option></select></div></div>
+<label for="voice">Specific voice (optional)</label><select id="voice"><option value="">Auto</option></select>
+<label class="chk"><input type="checkbox" id="fem" class="sv" checked>Female voice only</label>
+<div class="btns" style="margin-top:10px"><button id="btnTest">🔊 Test voice</button></div>
+<label class="chk"><input type="checkbox" id="auto" class="sv" checked>Auto speed &amp; timing</label>
+<label for="pace">Pace: <b id="paceV">1.0</b>x (slow ↔ fast)</label><input type="range" id="pace" class="sv" min="0.7" max="1.4" step="0.05" value="1">
+<div id="manual" class="hide">
+<label for="rate">Voice speed: <b id="rateV">0.9</b>x</label><input type="range" id="rate" class="sv" min="0.5" max="1.6" step="0.05" value="0.9">
+<div class="g2"><div><label for="wait">Answer after (sec)</label><input type="number" id="wait" class="sv" min="1" max="30" value="3"></div><div><label for="hold">Answer show (sec)</label><input type="number" id="hold" class="sv" min="1" max="30" value="3"></div></div></div>
+<label class="chk"><input type="checkbox" id="rOpt" class="sv" checked>Read options</label>
+<label class="chk"><input type="checkbox" id="rAns" class="sv" checked>Read answer</label>
+<label class="chk"><input type="checkbox" id="sfx" class="sv" checked>Tick &amp; ding sound</label>
+</div>
+
+<div class="pane" id="p-d">
+<label>Theme</label><div class="themes" id="themes"></div>
+<label>Colors</label><div class="cols" id="cols"></div>
+<label for="chan">Channel name</label><input type="text" id="chan" class="sv" placeholder="Your channel">
+<label for="foot">Footer text</label><input type="text" id="foot" class="sv" value="Like • Share • Subscribe">
+</div>
+
+<div class="pane" id="p-r">
+<label for="res">Video size (always 16:9)</label><select id="res" class="sv"><option value="1920x1080">1920 × 1080 Full HD</option><option value="1280x720">1280 × 720 HD</option></select>
+<div class="hint"><b>Desktop Chrome / Edge:</b> Record MP4 press → popup-la <b>This Tab</b> select + <b>Also share tab audio</b> tick. Record mudiyum varaikkum tab-a vittu pogaadheenga.<br><br><b>Mobile:</b> browser recording support illa. “Full screen play” press panni phone-oda screen recorder (internal audio on) use pannunga. Preview &amp; design full-aa work aagum.</div>
+</div>
+
+<div class="actions"><button class="go" id="bP">▶ Preview</button><button class="rec" id="bR">● Record MP4</button><button id="bS" disabled>■</button></div>
+</div>
+
+<div class="extra"><div id="result"></div><details><summary class="hint">Activity log</summary><div id="log">Ready.</div></details></div>
+</div>
+
+<script>
+(()=>{
+const $=id=>document.getElementById(id),cv=$('cv'),ctx=cv.getContext('2d'),DW=1366,DH=768;
+const FONT='"Noto Sans Tamil","Noto Sans Devanagari","Noto Sans Telugu","Noto Sans Kannada","Noto Sans Malayalam","Noto Sans Bengali","Noto Sans","Nirmala UI",sans-serif';
+let st={phase:'idle'},pv=null,pvRev=false,runId=0,rec=null,chunks=[],disp=null,mime='',ac=null,curAudio=null,curRes=null,total=0;
+const imgs=new Map(),sleep=ms=>new Promise(r=>setTimeout(r,ms)),log=m=>{$('log').textContent+='\n'+m};
+
+/* ---- settings ---- */
+const TH={Yellow:['#FFD21F','#FFFFFF','#1B1B6B','#FFFFFF','#141414','#E5202E','#FFFFFF','#1B1B6B'],Blue:['#1D4ED8','#FFF4C2','#12206B','#FFFFFF','#111111','#F59E0B','#111111','#FDE047'],Green:['#0F6B33','#EAF8B0','#1B1B9C','#FFF36B','#111111','#16A34A','#FFFFFF','#E0B020'],Purple:['#7C2AE8','#FFFFFF','#4B0F9E','#FFF0F7','#2A0A3D','#E5202E','#FFFFFF','#FFC93C']};
+const CL=[['cbg','Background'],['cq','Question box'],['cqt','Question text'],['co','Option box'],['cot','Option text'],['ca','Answer'],['cat','Answer text'],['cac','Border / accent']];
+$('cols').innerHTML=CL.map(([i,n])=>`<label>${n}<input type="color" id="${i}" class="sv"></label>`).join('');
+const setTheme=n=>TH[n].forEach((c,i)=>$(CL[i][0]).value=c);
+$('themes').innerHTML=Object.keys(TH).map(n=>`<button data-th="${n}">${TH[n].slice(0,2).concat(TH[n][5]).map(c=>`<i style="background:${c}"></i>`).join('')} ${n}</button>`).join('');
+$('themes').onclick=e=>{const b=e.target.closest('button');if(b){setTheme(b.dataset.th);save()}};
+setTheme('Yellow');
+const sv=()=>[...document.querySelectorAll('.sv')];
+function save(){try{const o={};sv().forEach(e=>o[e.id]=e.type=='checkbox'?e.checked:e.value);localStorage.setItem('qvm2',JSON.stringify(o))}catch(e){}}
+try{const o=JSON.parse(localStorage.getItem('qvm2')||'{}');sv().forEach(e=>{if(e.id in o){e.type=='checkbox'?e.checked=o[e.id]:e.value=o[e.id]}})}catch(e){}
+const V=id=>$(id).value,C=id=>$(id).checked;
+function ui(){$('paceV').textContent=(+V('pace')).toFixed(2).replace(/0$/,'');$('rateV').textContent=(+V('rate')).toFixed(2).replace(/0$/,'');$('manual').classList.toggle('hide',C('auto'));fillVoices();info()}
+document.addEventListener('input',e=>{if(e.target.classList.contains('sv')){save();ui()}});
+document.querySelector('.tabs').onclick=e=>{const b=e.target.closest('button');if(!b)return;document.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('on',x==b));document.querySelectorAll('.pane').forEach(p=>p.classList.toggle('on',p.id=='p-'+b.dataset.t))};
+
+/* ---- parsing ---- */
+function parseLine(raw){
+ let s=raw.trim(),img='';const im=s.match(/\|\s*([^|]*?)\s*\|\s*$/);if(im){img=im[1];s=s.slice(0,im.index).trim()}
+ const am=s.match(/["“”]([^"“”]*)["“”]\s*$/);if(!am)throw'Answer "..." missing';
+ const ans=am[1].trim();s=s.slice(0,am.index).trim().replace(/^\s*\d+\s*[\).:-]\s*/,'');
+ const f=s.search(/\(\s*[Aa]\s*\)/);if(f<0)throw'Options (A)(B)(C)(D) missing';
+ let pre=s.slice(0,f).trim(),op=pre.endsWith('(');if(op)pre=pre.slice(0,-1).trim();
+ let o=s.slice(f);if(op)o=o.replace(/\)\s*$/,'');
+ const re=/\(\s*([A-Fa-f])\s*\)/g,mk=[];let m;while(m=re.exec(o))mk.push({l:m[1].toUpperCase(),s:m.index,e:m.index+m[0].length});
+ const opts=mk.map((k,i)=>({label:k.l,text:o.slice(k.e,i+1<mk.length?mk[i+1].s:o.length).trim().replace(/[,;]\s*$/,'').trim()})).filter(x=>x.text);
+ if(opts.length<2)throw'Min 2 options venum';
+ const a=ans.toLowerCase();let ai=/^[A-Fa-f]$/.test(ans)?opts.findIndex(x=>x.label==ans.toUpperCase()):-1;
+ if(ai<0)ai=opts.findIndex(x=>x.text.toLowerCase()==a);if(ai<0)ai=opts.findIndex(x=>x.text.toLowerCase().includes(a)||a.includes(x.text.toLowerCase()));
+ if(ai<0)throw'Answer "'+ans+'" options-la illa';
+ return{q:pre,opts,ai,img}}
+function parseAll(){const items=[],errs=[];V('src').split(/\r?\n/).forEach((l,i)=>{if(!l.trim())return;try{items.push(parseLine(l))}catch(e){errs.push('Line '+(i+1)+': '+e)}});return{items,errs}}
+let tmr;
+function refresh(){const{items,errs}=parseAll();pv=items[0]||null;
+ $('status').innerHTML=(items.length?`<div class="ok">✔ ${items.length} question(s) ready</div>`:'<div class="wn">Questions paste pannunga</div>')+errs.map(e=>`<div class="er">✖ ${e.replace(/</g,'&lt;')}</div>`).join('');
+ const s=$('count'),k=s.value;s.innerHTML=`<option value="all">All (${items.length})</option>`+[5,10,20,30,50].filter(n=>n<items.length).map(n=>`<option value="${n}">First ${n}</option>`).join('');if([...s.options].some(o=>o.value==k))s.value=k;
+ clearTimeout(tmr);tmr=setTimeout(()=>{if(pv){loadImg(pv.img);document.fonts.load('700 40px '+FONT,pv.q+pv.opts.map(o=>o.text).join(''))}},400)}
+$('src').addEventListener('input',refresh);
+
+/* ---- voices ---- */
+const MALE=/valluvar|hemant|ravi\b|prabhat|rishi|\bmale\b|mark|david|james|george|guy|ryan|madhur|sagar|mohan|kumar|\bman\b/i,FEM=/female|pallavi|heera|neerja|swara|kalpana|lekha|veena|priya|aditi|raveena|shruti|zira|hazel|susan|samantha|aria|jenny|sonia|ananya|kavya|^google/i;
+const gen=v=>/female|woman/i.test(v.name)?'f':MALE.test(v.name)?'m':FEM.test(v.name)?'f':'?';
+const good=v=>/natural|online|neural|google/i.test(v.name);
+let voices=[];
+const pre=l=>l.toLowerCase().split('-')[0];
+function detect(t){return/[\u0B80-\u0BFF]/.test(t)?'ta-IN':/[\u0900-\u097F]/.test(t)?'hi-IN':/[\u0C00-\u0C7F]/.test(t)?'te-IN':/[\u0C80-\u0CFF]/.test(t)?'kn-IN':/[\u0D00-\u0D7F]/.test(t)?'ml-IN':/[\u0980-\u09FF]/.test(t)?'bn-IN':'en-IN'}
+function best(lang){const L=lang.toLowerCase(),p=pre(L);let b=null,bs=-1;
+ for(const v of voices){const vl=v.lang.toLowerCase().replace('_','-');let s=vl==L?10:vl.startsWith(p)?6:-1;if(s<0)continue;const g=gen(v);s+=g=='f'?5:g=='m'?-8:0;if(good(v))s+=2;if(s>bs){bs=s;b=v}}return b}
+function fillVoices(){voices=speechSynthesis.getVoices();const s=$('voice'),k=s.value,l=V('lang');
+ s.innerHTML='<option value="">Auto</option>'+voices.map((v,i)=>[v,i]).filter(([v])=>l=='auto'||v.lang.toLowerCase().startsWith(pre(l))).map(([v,i])=>`<option value="${i}">${gen(v)=='f'?'♀ ':gen(v)=='m'?'♂ ':''}${v.name} (${v.lang})</option>`).join('');s.value=k}
+function plan(lang){const m=V('voice'),d=m!==''?voices[m]:best(lang);
+ const online=V('engine')=='online'||(V('engine')=='auto'&&m===''&&(!d||(C('fem')&&gen(d)=='m')||(pre(lang)!='en'&&!good(d))));return{d,online}}
+function info(){const L=V('lang')=='auto'?['ta-IN','hi-IN']:[V('lang')];$('vinfo').textContent='Voice: '+L.map(l=>{const p=plan(l);return pre(l)+' → '+(p.online?'Online female':p.d?p.d.name:'default')}).join(' | ')}
+speechSynthesis.onvoiceschanged=()=>{fillVoices();info()};
+const SPK={ta:'ஏ,பி,சி,டி,இ,எஃப்',hi:'ए,बी,सी,डी,ई,एफ',te:'ఎ,బి,సి,డి,ఇ,ఎఫ్',kn:'ಎ,ಬಿ,ಸಿ,ಡಿ,ಇ,ಎಫ್',ml:'എ,ബി,സി,ഡി,ഇ,എഫ്',bn:'এ,বি,সি,ডি,ই,এফ'};
+const ANS={ta:'பதில்',hi:'सही उत्तर',te:'సమాధానం',kn:'ಉತ್ತರ',ml:'ഉത്തരം',bn:'উত্তর',en:'Answer'};
+const lab=(l,lang)=>{const p=pre(lang);return SPK[p]?SPK[p].split(',')[l.charCodeAt(0)-65]:l};
+const LANG=()=>V('lang');
+function rateFor(lang){if(!C('auto'))return+V('rate');const b={ta:.9,hi:.93,te:.9,kn:.9,ml:.88,bn:.93,en:1}[pre(lang)]||.95;return Math.min(1.8,b*V('pace'))}
+function cancelSpeech(){speechSynthesis.cancel();if(curAudio){curAudio.pause();curAudio=null}if(curRes){curRes();curRes=null}}
+function chunk(t,max=170){const out=[];let cur='';for(const w of t.split(/\s+/)){if((cur+' '+w).trim().length>max&&cur){out.push(cur);cur=w}else cur=(cur+' '+w).trim()}if(cur)out.push(cur);return out}
+async function playOnline(t,lang,rate){for(const c of chunk(t)){await new Promise((res,rej)=>{const a=new Audio('https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl='+pre(lang)+'&q='+encodeURIComponent(c));a.playbackRate=Math.max(.5,Math.min(2,rate));curAudio=a;curRes=res;const to=setTimeout(()=>rej(),20000);a.onended=()=>{clearTimeout(to);res()};a.onerror=()=>{clearTimeout(to);rej()};a.play().catch(()=>{clearTimeout(to);rej()})})}}
+function playDevice(t,lang,d,rate){return new Promise(res=>{const u=new SpeechSynthesisUtterance(t);u.lang=lang;if(d)u.voice=d;u.rate=rate;let f=0;const fin=()=>{if(!f){f=1;clearTimeout(tm);curRes=null;res()}};curRes=fin;u.onend=fin;u.onerror=fin;const tm=setTimeout(fin,Math.max(4000,t.length*450/rate+3000));speechSynthesis.speak(u)})}
+async function speak(t,fl){if(!t)return;const lang=fl&&fl!='auto'?fl:detect(t),r=rateFor(lang),p=plan(lang);
+ if(p.online){try{await playOnline(t,lang,r);return}catch(e){log('⚠ Online voice fail aachu (internet check) – device voice use pannren')}}
+ await playDevice(t,lang,p.d,r)}
+$('btnTest').onclick=async()=>{const l=LANG(),t={'ta-IN':'வணக்கம், இது ஒரு குரல் சோதனை','hi-IN':'नमस्ते, यह आवाज़ का परीक्षण है','te-IN':'నమస్కారం, ఇది వాయిస్ టెస్ట్','kn-IN':'ನಮಸ್ಕಾರ, ಇದು ಧ್ವನಿ ಪರೀಕ್ಷೆ','ml-IN':'നമസ്കാരം, ഇത് ശബ്ദ പരിശോധനയാണ്','bn-IN':'নমস্কার, এটি একটি ভয়েস টেস্ট'}[l]||'Hello, this is a voice test';cancelSpeech();await speak(t,l=='auto'?'ta-IN':l)};
+
+/* ---- sound ---- */
+function beep(f,d,ty='sine',v=.25,w=0){if(!ac||!C('sfx'))return;const o=ac.createOscillator(),g=ac.createGain(),t=ac.currentTime+w;o.type=ty;o.frequency.value=f;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.01);g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g).connect(ac.destination);o.start(t);o.stop(t+d+.05)}
+const tick=()=>beep(880,.12,'triangle',.22),ding=()=>{beep(784,.35,'sine',.3);beep(1047,.5,'sine',.3,.12);beep(1319,.7,'sine',.25,.26)};
+
+/* ---- images ---- */
+const tl=(s,c)=>new Promise(r=>{const i=new Image();if(c)i.crossOrigin='anonymous';i.onload=()=>r(i);i.onerror=()=>r(null);i.src=s});
+async function loadImg(u){if(!u)return null;if(imgs.has(u))return imgs.get(u);let i=await tl(u,1)||await tl('https://images.weserv.nl/?url='+encodeURIComponent(u.replace(/^https?:\/\//,'')),1);if(!i)log('⚠ Image load aagala: '+u);imgs.set(u,i);return i}
+
+/* ---- drawing ---- */
+const rgb=h=>{h=h.replace('#','');const n=parseInt(h,16);return[n>>16&255,n>>8&255,n&255]},rgba=(h,a)=>`rgba(${rgb(h)},${a})`;
+const mix=(a,b,t)=>'#'+rgb(a).map((x,i)=>Math.round(x+(rgb(b)[i]-x)*t).toString(16).padStart(2,'0')).join('');
+function rr(x,y,w,h,r){ctx.beginPath();ctx.roundRect?ctx.roundRect(x,y,w,h,r):ctx.rect(x,y,w,h)}
+function wrap(t,mw){const L=[];let c='';for(const w of t.split(/\s+/)){const x=c?c+' '+w:w;if(ctx.measureText(x).width>mw&&c){L.push(c);c=w}else c=x}if(c)L.push(c);return L}
+function fit(t,mw,mh,mx,mn,lh=1.35){let r;for(let s=mx;s>=mn;s-=2){ctx.font='700 '+s+'px '+FONT;r={L:wrap(t,mw),s,lh};if(r.L.length*s*lh<=mh)return r}return r}
+function lines(r,x,top,h,al){ctx.textAlign=al;const y0=top+(h-r.L.length*r.s*r.lh)/2;r.L.forEach((l,i)=>ctx.fillText(l,x,y0+r.s*r.lh*(i+.5)))}
+function shadow(on){ctx.shadowColor=on?'rgba(0,0,0,.28)':'transparent';ctx.shadowBlur=on?14:0;ctx.shadowOffsetY=on?6:0}
+function pill(t,x,y,h,fill,col,al,stroke){ctx.font='700 24px '+FONT;const w=ctx.measureText(t).width+44,px=al=='r'?x-w:x;rr(px,y,w,h,h/2);ctx.fillStyle=fill;shadow(1);ctx.fill();shadow(0);if(stroke){ctx.lineWidth=4;ctx.strokeStyle=stroke;ctx.stroke()}ctx.fillStyle=col;ctx.textAlign='center';ctx.fillText(t,px+w/2,y+h/2+1)}
+const PAL=['#2563EB','#F59E0B','#16A34A','#9333EA','#EC4899','#0891B2'];
+
+function draw(){
+ ctx.setTransform(cv.width/DW,0,0,cv.height/DH,0,0);ctx.textBaseline='middle';ctx.lineJoin='round';
+ const bg=V('cbg'),acc=V('cac');
+ ctx.fillStyle=bg;ctx.fillRect(0,0,DW,DH);
+ ctx.save();ctx.translate(DW/2,DH*.5);ctx.fillStyle=rgba('#FFFFFF',.13);for(let i=0;i<24;i+=2){ctx.beginPath();ctx.moveTo(0,0);ctx.arc(0,0,1300,i*Math.PI/12,(i+1)*Math.PI/12);ctx.fill()}ctx.restore();
+ const vg=ctx.createRadialGradient(DW/2,DH/2,DH*.45,DW/2,DH/2,DW*.75);vg.addColorStop(0,'transparent');vg.addColorStop(1,'rgba(0,0,0,.22)');ctx.fillStyle=vg;ctx.fillRect(0,0,DW,DH);
+ const live=!!st.item,it=live?st.item:(st.phase=='end'?null:pv),ph=live?st.phase:(pvRev?'reveal':'question');
+ if(!it){ctx.textAlign='center';ctx.fillStyle=V('cqt');ctx.font='700 64px '+FONT;ctx.fillText(st.phase=='end'?'Thanks for watching!':'Quiz Video Maker',DW/2,DH/2-24);ctx.font='700 30px '+FONT;ctx.fillText(st.phase=='end'?V('foot'):'Questions paste pannunga',DW/2,DH/2+44);return}
+ // header
+ if(V('chan'))pill(V('chan'),40,14,46,acc,'#FFFFFF','l');
+ pill('Q '+((live?st.i:0)+1)+' / '+(live?st.n:parseAll().items.length||1),DW-40,14,46,'#FFFFFF',acc,'r',acc);
+ // question
+ rr(40,96,DW-80,146,28);ctx.fillStyle=V('cq');shadow(1);ctx.fill();shadow(0);ctx.lineWidth=6;ctx.strokeStyle=acc;ctx.stroke();
+ ctx.fillStyle=V('cqt');const q=fit(it.q,DW-170,120,54,22);ctx.font='700 '+q.s+'px '+FONT;lines(q,DW/2,96,146,'center');
+ // options
+ const n=it.opts.length,gap=12,top=262,H=452,bh=Math.min(112,(H-gap*(n-1))/n),y0=top+(H-(n*bh+gap*(n-1)))/2,rev=ph=='reveal';
+ it.opts.forEach((o,i)=>{const y=y0+i*(bh+gap),x=40,w=650,ok=i==it.ai&&rev;ctx.save();if(rev&&!ok)ctx.globalAlpha=.4;
+  if(ok){const k=1+.015*Math.sin(performance.now()/110);ctx.translate(x+w/2,y+bh/2);ctx.scale(k,k);ctx.translate(-x-w/2,-y-bh/2)}
+  rr(x,y,w,bh,22);ctx.fillStyle=ok?V('ca'):V('co');shadow(1);ctx.fill();shadow(0);ctx.lineWidth=ok?7:4;ctx.strokeStyle=ok?'#FFFFFF':acc;ctx.stroke();
+  const r=Math.min(34,bh/2-9);ctx.beginPath();ctx.arc(x+16+r+4,y+bh/2,r,0,7);ctx.fillStyle=ok?'#FFFFFF':PAL[i%6];ctx.fill();
+  ctx.fillStyle=ok?V('ca'):'#FFFFFF';ctx.font='700 '+Math.round(r*1.1)+'px "Noto Sans",sans-serif';ctx.textAlign='center';ctx.fillText(o.label,x+20+r,y+bh/2+1);
+  ctx.fillStyle=ok?V('cat'):V('cot');const t=fit(o.text,w-r*2-110,bh-12,44,20);ctx.font='700 '+t.s+'px '+FONT;lines(t,x+r*2+36,y,bh,'left');
+  if(ok){ctx.strokeStyle='#FFFFFF';ctx.lineWidth=9;ctx.lineCap='round';const cx=x+w-44,cy=y+bh/2;ctx.beginPath();ctx.moveTo(cx-16,cy);ctx.lineTo(cx-4,cy+13);ctx.lineTo(cx+18,cy-14);ctx.stroke()}
+  ctx.restore()});
+ // image / answer card
+ const bx=714,by=top,bw=612;rr(bx,by,bw,H,26);ctx.fillStyle='#FFFFFF';shadow(1);ctx.fill();shadow(0);ctx.lineWidth=6;ctx.strokeStyle=acc;ctx.stroke();
+ const im=imgs.get(it.img);
+ if(im){ctx.save();rr(bx+10,by+10,bw-20,H-20,18);ctx.clip();const s=Math.min((bw-28)/im.width,(H-28)/im.height);ctx.drawImage(im,bx+(bw-im.width*s)/2,by+(H-im.height*s)/2,im.width*s,im.height*s);ctx.restore()}
+ else{ctx.textAlign='center';if(rev){ctx.fillStyle=V('ca');const a=fit(it.opts[it.ai].text,bw-70,H-60,80,26);ctx.font='700 '+a.s+'px '+FONT;lines(a,bx+bw/2,by,H,'center')}else{ctx.fillStyle=rgba(acc,.25);ctx.font='700 300px "Noto Sans",sans-serif';ctx.fillText('?',bx+bw/2,by+H/2+10)}}
+ // timer
+ if(ph=='countdown'&&st.cd){const left=Math.max(0,st.cd.d-(performance.now()-st.cd.t)),cx=1282,cy=by+H-8,r=50;
+  ctx.beginPath();ctx.arc(cx,cy,r,0,7);ctx.fillStyle='#FFFFFF';shadow(1);ctx.fill();shadow(0);
+  ctx.lineWidth=9;ctx.strokeStyle=rgba(acc,.18);ctx.beginPath();ctx.arc(cx,cy,r-4,0,7);ctx.stroke();
+  ctx.strokeStyle=V('ca');ctx.lineCap='round';ctx.beginPath();ctx.arc(cx,cy,r-4,-Math.PI/2,-Math.PI/2+Math.PI*2*left/st.cd.d);ctx.stroke();
+  ctx.fillStyle=acc;ctx.font='700 56px "Noto Sans",sans-serif';ctx.textAlign='center';ctx.fillText(Math.ceil(left/1000),cx,cy+3)}
+ // progress + footer
+ const pr=live?(st.i+(rev?1:.5))/st.n:0;rr(40,732,DW-80,9,4.5);ctx.fillStyle='rgba(0,0,0,.18)';ctx.fill();if(pr>0){rr(40,732,(DW-80)*pr,9,4.5);ctx.fillStyle=acc;ctx.fill()}
+ ctx.fillStyle=acc;ctx.font='700 17px '+FONT;ctx.textAlign='center';ctx.fillText(V('foot'),DW/2,754)}
+(function L(){draw();requestAnimationFrame(L)})();
+cv.onclick=()=>{if(!st.item){pvRev=!pvRev}};
+
+/* ---- recording ---- */
+const canRec=!!(navigator.mediaDevices&&navigator.mediaDevices.getDisplayMedia&&window.MediaRecorder);
+if(!canRec){$('bR').textContent='● Record (desktop)'}
+async function startRec(){disp=await navigator.mediaDevices.getDisplayMedia({video:true,audio:true,preferCurrentTab:true,selfBrowserSurface:'include',systemAudio:'include'});
+ const at=disp.getAudioTracks();if(!at.length)log('⚠ Tab audio share aagala – voice record aagaadhu. “Also share tab audio” tick pannunga.');
+ const s=new MediaStream([...cv.captureStream(30).getVideoTracks(),...at]);
+ mime=['video/mp4;codecs=avc1.640028,mp4a.40.2','video/mp4;codecs=avc1,mp4a.40.2','video/mp4','video/webm;codecs=vp9,opus','video/webm'].find(m=>MediaRecorder.isTypeSupported(m))||'';
+ rec=new MediaRecorder(s,Object.assign({videoBitsPerSecond:10e6,audioBitsPerSecond:192e3},mime?{mimeType:mime}:{}));chunks=[];
+ rec.ondataavailable=e=>e.data&&e.data.size&&chunks.push(e.data);rec.onstop=fin;rec.start(1000);log('● Recording ('+(mime||'default')+')')}
+function fin(){const mp=mime.includes('mp4'),b=new Blob(chunks,{type:mime||'video/webm'}),u=URL.createObjectURL(b),d=new Date(),p=n=>String(n).padStart(2,'0'),nm='quiz-'+d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+'-'+p(d.getHours())+p(d.getMinutes())+(mp?'.mp4':'.webm');
+ $('result').innerHTML=`<b>Recording ready:</b> <a download="${nm}" href="${u}">${nm}</a> (${(b.size/1048576).toFixed(1)} MB)${mp?'':'<div class="hint">⚠ Indha browser MP4 support pannala, WebM aachu. YouTube accept pannum.</div>'}<video controls src="${u}"></video>`;
+ const a=document.createElement('a');a.href=u;a.download=nm;document.body.appendChild(a);a.click();a.remove();log('✔ Saved '+nm);
+ if(disp){disp.getTracks().forEach(t=>t.stop());disp=null}rec=null}
+function stopRec(){if(rec&&rec.state!='inactive')rec.stop();else if(disp){disp.getTracks().forEach(t=>t.stop());disp=null}}
+
+/* ---- run ---- */
+const setUI=on=>{$('bP').disabled=$('bR').disabled=on;$('bS').disabled=!on};
+async function run(record){
+ const{items:all,errs}=parseAll();if(!all.length){log('✖ Valid question illa');return}
+ if(errs.length)log('⚠ '+errs.length+' line skip aachu');
+ const items=V('count')=='all'?all:all.slice(0,+V('count')),[W,H]=V('res').split('x').map(Number);cv.width=W;cv.height=H;
+ const my=++runId;setUI(true);$('result').innerHTML='';ac=ac||new(window.AudioContext||window.webkitAudioContext)();if(ac.state=='suspended')await ac.resume();
+ const lang=LANG(),pace=+V('pace'),auto=C('auto');
+ try{st={phase:'idle'};log('Loading…');
+  for(const it of items){await loadImg(it.img);try{await document.fonts.load('700 40px '+FONT,it.q+it.opts.map(o=>o.text).join(''))}catch(e){}}
+  if(record)await startRec();await sleep(700);
+  for(let i=0;i<items.length&&my==runId;i++){
+   const it=items[i],a=it.opts[it.ai],wait=auto?Math.max(2,Math.round(3/pace)):Math.max(1,+V('wait')||3),hold=auto?Math.min(5,Math.max(2,(2+a.text.length/25)/pace)):+V('hold')||3;
+   st={item:it,phase:'question',i,n:items.length};log('Q'+(i+1)+': '+it.q);
+   await sleep(500);await speak(it.q,lang);
+   if(C('rOpt'))for(const o of it.opts){if(my!=runId)break;await sleep(auto?200/pace:150);await speak(lab(o.label,lang=='auto'?detect(o.text):lang)+'. '+o.text,lang)}
+   if(my!=runId)break;
+   st.phase='countdown';st.cd={t:performance.now(),d:wait*1000};
+   for(let c=0;c<wait&&my==runId;c++){tick();await sleep(1000)}
+   if(my!=runId)break;
+   st.phase='reveal';ding();
+   if(C('rAns')){await sleep(400);const l=lang=='auto'?detect(a.text):lang;await speak((ANS[pre(l)]||ANS.en)+'. '+lab(a.label,l)+'. '+a.text,lang)}
+   await sleep(hold*1000)}
+  if(my==runId){st={phase:'end'};await sleep(2000)}
+ }catch(e){log('✖ '+(e&&e.name=='NotAllowedError'?'Screen/tab share permission kudukkala':e&&e.message||e))}
+ finally{cancelSpeech();stopRec();if(my==runId){setUI(false);st={phase:'idle'}}else setUI(false)}}
+$('bP').onclick=()=>run(false);
+$('bR').onclick=()=>{if(!canRec){log('✖ Recording desktop Chrome/Edge-la mattum. Mobile-la “Full screen play” + screen recorder use pannunga.');document.querySelector('[data-t=r]').click();return}run(true)};
+$('bS').onclick=()=>{runId++;cancelSpeech();log('■ Stopped')};
+$('btnFs').onclick=async()=>{try{await $('stage').requestFullscreen();screen.orientation&&screen.orientation.lock&&screen.orientation.lock('landscape').catch(()=>{})}catch(e){}await run(false);if(document.fullscreenElement)document.exitFullscreen()};
+$('res').onchange=()=>{const[W,H]=V('res').split('x').map(Number);cv.width=W;cv.height=H};
+{const[W,H]=V('res').split('x').map(Number);cv.width=W;cv.height=H}
+refresh();ui();document.fonts.load('700 40px '+FONT,'மூக்கால் अ A');
+})();
+</script></body></html>
